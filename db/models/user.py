@@ -1,0 +1,21 @@
+from sqlalchemy import Column, Integer, String, Boolean, Date, func
+from sqlalchemy.orm import relationship
+from ..session import Base
+
+
+class User(Base):
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, nullable=False, index=True)
+    hashed_password = Column(String, index=True)
+    full_name = Column(String, index=True)
+    is_active = Column(Boolean, default=False, index=True)
+    created_at = Column(Date, server_default=func.now(), index=True)
+    avatar_url = Column(String, nullable=True, index=True)
+
+    # Отношение "один ко многим" с моделью Article
+    articles = relationship('Article', back_populates='author')
+
+    # Отношение "один ко многим" с моделью Comment
+    comment = relationship('Comment', back_populates='commentator')

@@ -1,0 +1,21 @@
+[project]
+name = "articles-app"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "alex",email = "alex_77_90@mail.ru"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "sqlalchemy (>=2.0.38,<3.0.0)",
+    "fastapi (>=0.115.11,<0.116.0)",
+    "asyncpg (>=0.30.0,<0.31.0)",
+    "pydantic (>=2.10.6,<3.0.0)",
+    "uvicorn (>=0.34.0,<0.35.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
