@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, Date, func
 from sqlalchemy.orm import relationship
+
 from ..session import Base
 
 
@@ -18,4 +19,7 @@ class User(Base):
     articles = relationship('Article', back_populates='author')
 
     # Отношение "один ко многим" с моделью Comment
-    comment = relationship('Comment', back_populates='commentator')
+    comments = relationship('Comment', back_populates='commentator')
+
+    def __str__(self):
+        return f'id: {self.id} email: {self.email} full_name: {self.full_name}'
