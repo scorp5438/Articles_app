@@ -8,7 +8,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from argon2 import PasswordHasher
 
-from db.models.user import User
+from db.models.user import User, Token
 from db.session import get_db
 from schemas.user import TokenData
 
@@ -36,7 +36,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 
 # Функция для проверки пароля
 def verify_password(plain_password: str, hashed_password: str):
-    return ph.verify(plain_password, hashed_password)
+    return ph.verify(hashed_password, plain_password)
 
 
 # Функция для хэширования пароля
@@ -47,11 +47,19 @@ def get_password_hash(password: str):
 async def get_current_user(
         token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
 ):
+    *_, token_exist =  token.split()
+    result = await db.execute(select(Token).filter(Token.token == token_exist))
+    token_bd = result.scalars().first()
+
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail='Could not validate credentials',
         headers={'WWW-Authenticate': 'Bearer'},
     )
+
+    if not token_bd:
+        raise credentials_exception
+
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get('sub')
@@ -65,4 +73,4 @@ async def get_current_user(
     db_user = result.scalars().first()
     if db_user is None:
         raise credentials_exception
-    return db
+    return db_user

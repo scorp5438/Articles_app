@@ -1,14 +1,28 @@
 from datetime import timedelta
-
-from fastapi import APIRouter, Depends, HTTPException, status
+from typing import List
+from fastapi import (APIRouter,
+                     Depends,
+                     HTTPException,
+                     status)
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from sqlalchemy.future import select
 
-from core.security import verify_password, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, get_password_hash
-from db.models.user import User
+from core.security import (verify_password,
+                           ACCESS_TOKEN_EXPIRE_MINUTES,
+                           create_access_token,
+                           get_current_user,
+                           oauth2_scheme)
 from db.session import get_db
-from schemas.user import Token, CreateUser
+from db.models import User
+from schemas.user import (Token,
+                          UserCreate,
+                          UserResponse,
+                          UserUpdate)
+from crud.user import (create,
+                       read,
+                       update as user_update,
+                       delete,
+                       get_user, add_token, del_token)
 
 router = APIRouter(prefix='/auth', tags=['auth'])
 
@@ -17,8 +31,8 @@ router = APIRouter(prefix='/auth', tags=['auth'])
 async def login(
         form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
 ):
-    result = await db.execute(select(User).filter(User.email == form_data.username))
-    db_user = result.scalars().first()
+    email = form_data.username
+    db_user = await get_user(db, user_email=email)
     if not db_user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -34,28 +48,40 @@ async def login(
     access_token = create_access_token(
         data={'sub': db_user.email}, expires_delta=access_token_expires
     )
+    await add_token(access_token, db)
     return {'access_token': access_token, 'token_type': 'bearer'}
 
 
+@router.post('/logout')
+async def logout(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    await del_token(token, db)
+    return {'message': 'Successfully logged out', 'status': status.HTTP_200_OK}
+
+
 @router.post('/register')
-async def register(user: CreateUser, db: Session = Depends(get_db)):
-    result = await db.execute(select(User).filter(User.email == user.email))
-    db_user = result.scalars().first()
-    if db_user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail='Email already registered'
-        )
+async def register(user: UserCreate, db: Session = Depends(get_db)):
+    return await create(user, db)
 
-    hashed_password = get_password_hash(user.password)
 
-    new_user = User(
-        email=user.email,
-        hashed_password=hashed_password,
-        full_name=user.full_name,
-        is_active=True,
-    )
-    db.add(new_user)
-    await db.commit()
-    await db.refresh(new_user)
-    return new_user
+@router.get('/users', response_model=List[UserResponse])
+async def get_users(
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user)
+):
+    return await read(db)
+
+
+@router.patch('/update/{user_id:int}')
+async def update(
+        data: UserUpdate, user_id: int, db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user)
+):
+    return await user_update(data, user_id, db)
+
+
+@router.delete('/delete/{user_id:int}')
+async def del_user(
+        user_id: int, db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user)
+):
+    return await delete(user_id, db)

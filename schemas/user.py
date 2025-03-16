@@ -8,7 +8,7 @@ PATTERN_FULL = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%#?&]
 PATTERN_LITE = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$'
 
 
-class CreateUser(BaseModel):
+class UserCreate(BaseModel):
     email: EmailStr
     password: str = Field(min_length=8)
     full_name: str = Field(min_length=3, max_length=30)
@@ -28,6 +28,13 @@ class UserResponse(BaseModel):
     is_active: bool
     created_at: date
     avatar_url: Optional[str]
+
+
+class UserUpdate(BaseModel):
+    email: Optional[EmailStr] = None
+    full_name: Optional[str] = None
+    avatar_url: Optional[str] = None
+    password: Optional[str] = None
 
 
 # Схема для ответа с токеном

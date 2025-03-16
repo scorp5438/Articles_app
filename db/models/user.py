@@ -1,4 +1,10 @@
-from sqlalchemy import Column, Integer, String, Boolean, Date, func
+from sqlalchemy import (Column,
+                        Integer,
+                        String,
+                        Boolean,
+                        Date,
+                        DateTime,
+                        func)
 from sqlalchemy.orm import relationship
 
 from ..session import Base
@@ -23,3 +29,11 @@ class User(Base):
 
     def __str__(self):
         return f'id: {self.id} email: {self.email} full_name: {self.full_name}'
+
+
+class Token(Base):
+    __tablename__ = 'tokens'
+
+    id = Column(Integer, primary_key=True, index=True)
+    token = Column(String, unique=True, index=True)
+    expire_at = Column(DateTime)
