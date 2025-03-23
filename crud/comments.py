@@ -1,10 +1,12 @@
 from sqlalchemy.orm import Session
-from fastapi import status, HTTPException
+from fastapi import (status,
+                     HTTPException)
 from sqlalchemy.future import select
 
 from crud.user import get_user
 from db.models import User
-from schemas.comment import CommentCreate, CommentResponse
+from schemas.comment import (CommentCreate,
+                             CommentResponse)
 from db.models.comment import Comment
 
 

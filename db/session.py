@@ -1,5 +1,7 @@
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.ext.asyncio import (create_async_engine,
+                                    AsyncSession)
+from sqlalchemy.orm import (sessionmaker,
+                            declarative_base)
 
 # Укажите URL вашей базы данных PostgreSQL
 SQLALCHEMY_DATABASE_URL = 'postgresql+asyncpg://user_art:1324@localhost/articles_db'

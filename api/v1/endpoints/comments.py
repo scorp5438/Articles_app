@@ -1,13 +1,17 @@
 from typing import List
 
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends
+from fastapi import (APIRouter,
+                     Depends)
 
 from core.security import get_current_user
 from db.models import User
 from db.session import get_db
-from schemas.comment import CommentCreate, CommentResponse
-from crud.comments import create, read, delete
+from schemas.comment import (CommentCreate,
+                             CommentResponse)
+from crud.comments import (create,
+                           read,
+                           delete)
 
 router = APIRouter(prefix='/comments', tags=['comments'])
 

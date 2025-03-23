@@ -1,12 +1,15 @@
 from typing import Optional
 
 from sqlalchemy.orm import Session
-from fastapi import status, HTTPException
+from fastapi import (status,
+                     HTTPException)
 from sqlalchemy.future import select
 
 from crud.user import get_user
 from db.models import Article
-from schemas.article import ArticleCreate, ArticleUpdate, ArticleResponse
+from schemas.article import (ArticleCreate,
+                             ArticleUpdate,
+                             ArticleResponse)
 
 
 async def get_article(db: Session, article_id: Optional[int] = None):

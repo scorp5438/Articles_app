@@ -1,14 +1,18 @@
 from typing import List
-from datetime import datetime
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from core.security import get_current_user
 from db.models import User
 from db.session import get_db
-from schemas.article import ArticleResponse, ArticleCreate, ArticleUpdate
-from crud.articles import create, read, update, delete
+from schemas.article import (ArticleResponse,
+                             ArticleCreate,
+                             ArticleUpdate)
+from crud.articles import (create,
+                           read,
+                           update,
+                           delete)
 
 router = APIRouter(prefix='/articles', tags=['articles'])
 

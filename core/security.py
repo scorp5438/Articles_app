@@ -3,12 +3,15 @@ from typing import Optional
 
 from sqlalchemy.orm import Session
 from sqlalchemy.future import select
-from fastapi import Depends, HTTPException, status
+from fastapi import (Depends,
+                     HTTPException,
+                     status)
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from argon2 import PasswordHasher
 
-from db.models.user import User, Token
+from db.models.user import (User,
+                            Token)
 from db.session import get_db
 from schemas.user import TokenData
 
@@ -21,6 +24,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/login')
 
 # Контекст для хэширования паролей
 ph = PasswordHasher()
+
 
 # Функция для создания JWT-токена
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
@@ -47,7 +51,7 @@ def get_password_hash(password: str):
 async def get_current_user(
         token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
 ):
-    *_, token_exist =  token.split()
+    *_, token_exist = token.split()
     result = await db.execute(select(Token).filter(Token.token == token_exist))
     token_bd = result.scalars().first()
 
