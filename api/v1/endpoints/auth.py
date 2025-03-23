@@ -20,7 +20,7 @@ from schemas.user import (Token,
                           UserUpdate)
 from crud.user import (create,
                        read,
-                       update as user_update,
+                       update,
                        delete,
                        get_user, add_token, del_token)
 
@@ -72,15 +72,15 @@ async def get_users(
 
 
 @router.patch('/update/{user_id:int}')
-async def update(
+async def update_user(
         data: UserUpdate, user_id: int, db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user)
 ):
-    return await user_update(data, user_id, db)
+    return await update(data, user_id, db)
 
 
 @router.delete('/delete/{user_id:int}')
-async def del_user(
+async def delete_user(
         user_id: int, db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user)
 ):

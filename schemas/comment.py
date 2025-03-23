@@ -5,11 +5,10 @@ from datetime import datetime
 class CommentCreate(BaseModel):
     content: str = Field(min_length=1)
     article_id: int = Field()
-    author_id: int = Field()
 
 
 class CommentResponse(BaseModel):
     content: str
     article_id: int
-    author_id: int
+    author_name: str
     created_at: datetime

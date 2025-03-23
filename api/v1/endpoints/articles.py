@@ -4,24 +4,47 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from schemas.article import ArticleResponse, ArticleCreate
+from core.security import get_current_user
+from db.models import User
+from db.session import get_db
+from schemas.article import ArticleResponse, ArticleCreate, ArticleUpdate
+from crud.articles import create, read, update, delete
 
 router = APIRouter(prefix='/articles', tags=['articles'])
 
-articles = []
+
+@router.post('/create')
+async def create_article(
+        article: ArticleCreate,
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user)
+):
+    current_user_id = current_user.id
+
+    return await create(current_user_id, article, db)
 
 
-def add_article(article: ArticleCreate):
-    articles.append(article)
-    print(articles)
+@router.get('/', response_model=List[ArticleResponse])
+async def show_article(db: Session = Depends(get_db)):
+    return await read(db)
 
 
-@router.post('/')
-async def create_article(article: ArticleCreate):
-    add_article(article)
-    return articles
+@router.patch('/update/{article_id:int}')
+async def update_article(
+        data: ArticleUpdate,
+        article_id: int,
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user)
+):
+    current_user_id = current_user.id
+    return await update(data, article_id, current_user_id, db)
 
 
-@router.get('/')
-async def show_article():
-    return articles
+@router.delete('/delete/{article_id:int}')
+async def delete_article(
+        article_id: int,
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user)
+):
+    current_user_id = current_user.id
+    return await delete(article_id, current_user_id, db)
