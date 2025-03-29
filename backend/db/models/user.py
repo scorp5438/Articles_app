@@ -10,6 +10,7 @@ from sqlalchemy.orm import relationship
 from ..session import Base
 
 
+
 class User(Base):
     __tablename__ = 'users'
 
@@ -20,6 +21,7 @@ class User(Base):
     is_active = Column(Boolean, default=False, index=True)
     created_at = Column(Date, server_default=func.now(), index=True)
     avatar_url = Column(String, nullable=True, index=True)
+    is_staff = Column(Boolean, default=False, index=True)
 
     # Отношение "один ко многим" с моделью Article
     articles = relationship('Article', back_populates='author')

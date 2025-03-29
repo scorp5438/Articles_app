@@ -4,14 +4,14 @@ from sqlalchemy.orm import Session
 from fastapi import (APIRouter,
                      Depends)
 
-from core.security import get_current_user
-from db.models import User
-from db.session import get_db
-from schemas.comment import (CommentCreate,
-                             CommentResponse)
-from crud.comments import (create,
-                           read,
-                           delete)
+from backend.core.security import get_current_user
+from backend.db.models import User
+from backend.db.session import get_db
+from backend.schemas.comment import (CommentCreate,
+                                     CommentResponse)
+from backend.crud.comments import (create,
+                                   read,
+                                   delete)
 
 router = APIRouter(prefix='/comments', tags=['comments'])
 

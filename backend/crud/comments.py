@@ -3,11 +3,11 @@ from fastapi import (status,
                      HTTPException)
 from sqlalchemy.future import select
 
-from crud.user import get_user
-from db.models import User
-from schemas.comment import (CommentCreate,
-                             CommentResponse)
-from db.models.comment import Comment
+from backend.crud.user import get_user
+from backend.db.models import User
+from backend.schemas.comment import (CommentCreate,
+                                     CommentResponse)
+from backend.db.models.comment import Comment
 
 
 async def create(

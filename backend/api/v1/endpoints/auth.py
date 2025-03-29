@@ -7,22 +7,22 @@ from fastapi import (APIRouter,
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-from core.security import (verify_password,
-                           ACCESS_TOKEN_EXPIRE_MINUTES,
-                           create_access_token,
-                           get_current_user,
-                           oauth2_scheme)
-from db.session import get_db
-from db.models import User
-from schemas.user import (Token,
-                          UserCreate,
-                          UserResponse,
-                          UserUpdate)
-from crud.user import (create,
-                       read,
-                       update,
-                       delete,
-                       get_user, add_token, del_token)
+from backend.core.security import (verify_password,
+                                   ACCESS_TOKEN_EXPIRE_MINUTES,
+                                   create_access_token,
+                                   get_current_user,
+                                   oauth2_scheme)
+from backend.db.session import get_db
+from backend.db.models import User
+from backend.schemas.user import (Token,
+                                  UserCreate,
+                                  UserResponse,
+                                  UserUpdate)
+from backend.crud.user import (create,
+                               read,
+                               update,
+                               delete,
+                               get_user, add_token, del_token)
 
 router = APIRouter(prefix='/auth', tags=['auth'])
 

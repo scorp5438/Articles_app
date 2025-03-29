@@ -10,10 +10,10 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from argon2 import PasswordHasher
 
-from db.models.user import (User,
-                            Token)
-from db.session import get_db
-from schemas.user import TokenData
+from backend.db.models.user import (User,
+                                    Token)
+from backend.db.session import get_db
+from backend.schemas.user import TokenData
 
 # Секретный ключ для подписи JWT
 SECRET_KEY = 'VPVU3KCIYEKHb2BtaJlHYbpNeSAwEGYmViccL36NhceY1NQksHfv6KJ3/siNtKJr'

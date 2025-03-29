@@ -5,11 +5,11 @@ from fastapi import (status,
                      HTTPException)
 from sqlalchemy.future import select
 
-from crud.user import get_user
-from db.models import Article
-from schemas.article import (ArticleCreate,
-                             ArticleUpdate,
-                             ArticleResponse)
+from backend.crud.user import get_user
+from backend.db.models import Article
+from backend.schemas.article import (ArticleCreate,
+                                     ArticleUpdate,
+                                     ArticleResponse)
 
 
 async def get_article(db: Session, article_id: Optional[int] = None):

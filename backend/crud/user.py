@@ -6,11 +6,11 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.future import select
 from pydantic import EmailStr
-from core.security import get_password_hash
-from db.models.user import User, Token
-from schemas.user import (UserCreate,
-                          UserResponse,
-                          UserUpdate)
+from backend.core.security import get_password_hash
+from backend.db.models.user import User, Token
+from backend.schemas.user import (UserCreate,
+                                  UserResponse,
+                                  UserUpdate)
 
 
 async def get_user(db: Session, user_id: int = None, user_email: EmailStr | str = None):
