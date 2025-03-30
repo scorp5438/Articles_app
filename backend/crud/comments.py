@@ -3,6 +3,7 @@ from fastapi import (status,
                      HTTPException)
 from sqlalchemy.future import select
 
+from backend.core.decorators import check_article_permissions
 from backend.crud.user import get_user
 from backend.db.models import User
 from backend.schemas.comment import (CommentCreate,
@@ -12,13 +13,13 @@ from backend.db.models.comment import Comment
 
 async def create(
         comment: CommentCreate,
-        current_user_id: id,
+        current_user: User,
         db: Session
 ):
     comment_db = Comment(
         content=comment.content,
         article_id=comment.article_id,
-        author_id=current_user_id
+        author_id=current_user.id
     )
 
     db.add(comment_db)
@@ -33,6 +34,7 @@ async def read(article_id: int, db: Session):
 
     comments_response = [
         CommentResponse(
+            id=comment.id,
             content=comment.content,
             article_id=comment.article_id,
             author_name=(await get_user(db=db, user_id=comment.author_id)).full_name,
@@ -43,20 +45,10 @@ async def read(article_id: int, db: Session):
     return comments_response
 
 
-async def delete(comment_id: int, db: Session, current_user_id: User):
+@check_article_permissions(Comment)
+async def delete(comment_id: int, current_user: User, db: Session):
     result = await db.execute(select(Comment).filter(Comment.id == comment_id))
     comment = result.scalars().first()
-    if not comment:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail='Comment not found'
-        )
-
-    if current_user_id != comment.author_id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail='You don`t have permission'
-        )
 
     await db.delete(comment)
     await db.commit()

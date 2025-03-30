@@ -5,8 +5,9 @@ from fastapi import (status,
                      HTTPException)
 from sqlalchemy.future import select
 
+from backend.core.decorators import check_article_permissions
 from backend.crud.user import get_user
-from backend.db.models import Article
+from backend.db.models import Article, User
 from backend.schemas.article import (ArticleCreate,
                                      ArticleUpdate,
                                      ArticleResponse)
@@ -56,25 +57,14 @@ async def read(db: Session):
     return article_response
 
 
+@check_article_permissions(Article)
 async def update(
-        data: ArticleUpdate,
         article_id: int,
-        current_user_id: int,
-        db: Session
+        current_user: User,
+        db: Session,
+        data: ArticleUpdate
 ):
     article = await get_article(db, article_id)
-
-    if not article:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail='Article not found'
-        )
-
-    if article.author_id != current_user_id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail='You don`t have permission'
-        )
 
     update_data: dict = data.model_dump(exclude_unset=True)
     for key, value in update_data.items():
@@ -86,24 +76,13 @@ async def update(
     return {'message': 'Article updated', 'status': status.HTTP_200_OK}
 
 
+@check_article_permissions(Article)
 async def delete(
         article_id: int,
-        current_user_id: int,
+        current_user: User,
         db: Session
 ):
     article = await get_article(db, article_id)
-
-    if not article:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail='Article not found'
-        )
-
-    if article.author_id != current_user_id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail='You don`t have permission'
-        )
 
     await db.delete(article)
     await db.commit()

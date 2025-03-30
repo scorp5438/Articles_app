@@ -26,10 +26,12 @@ class UserCreate(BaseModel):
 
 
 class UserResponse(BaseModel):
+    id: int
     email: EmailStr
     full_name: str
     is_active: bool
     created_at: date
+    is_staff: Optional[bool]
     avatar_url: Optional[str]
 
 
@@ -38,6 +40,7 @@ class UserUpdate(BaseModel):
     full_name: Optional[str] = None
     avatar_url: Optional[str] = None
     password: Optional[str] = None
+    is_staff: Optional[bool] = None
 
 
 # Схема для ответа с токеном

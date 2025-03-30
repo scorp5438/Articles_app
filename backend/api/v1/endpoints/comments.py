@@ -22,8 +22,7 @@ async def create_comment(
         db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user)
 ):
-    current_user_id = current_user.id
-    return await create(comment, current_user_id, db)
+    return await create(comment, current_user, db)
 
 
 @router.get('/{article_id:int}', response_model=List[CommentResponse])
@@ -42,5 +41,4 @@ async def delete_comment(
         db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user)
 ):
-    current_user_id = current_user.id
-    return await delete(comment_id, db, current_user_id)
+    return await delete(comment_id, current_user, db)

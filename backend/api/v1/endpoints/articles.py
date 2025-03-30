@@ -40,8 +40,7 @@ async def update_article(
         db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user)
 ):
-    current_user_id = current_user.id
-    return await update(data, article_id, current_user_id, db)
+    return await update(article_id, current_user, db, data)
 
 
 @router.delete('/delete/{article_id:int}')
@@ -50,5 +49,4 @@ async def delete_article(
         db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user)
 ):
-    current_user_id = current_user.id
-    return await delete(article_id, current_user_id, db)
+    return await delete(article_id, current_user, db)

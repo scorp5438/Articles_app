@@ -9,6 +9,7 @@ class CommentCreate(BaseModel):
 
 
 class CommentResponse(BaseModel):
+    id: int
     content: str
     article_id: int
     author_name: str

@@ -78,3 +78,5 @@ async def get_current_user(
     if db_user is None:
         raise credentials_exception
     return db_user
+
+
