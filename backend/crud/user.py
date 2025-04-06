@@ -8,6 +8,7 @@ from sqlalchemy.future import select
 from pydantic import EmailStr
 from backend.core.security import get_password_hash
 from backend.db.models.user import User, Token
+# from backend.email.email import send_email
 from backend.schemas.user import (UserCreate,
                                   UserResponse,
                                   UserUpdate)
@@ -80,6 +81,13 @@ async def create(user: UserCreate, db: Session):
     db.add(new_user)
     await db.commit()
     await db.refresh(new_user)
+
+    # await send_email(
+    #     new_user,
+    #     'Подтверждение регистрации',
+    #     'reg_confirm.html'
+    # )
+
     return {'message': 'Successfully registered', 'status': status.HTTP_201_CREATED}
 
 

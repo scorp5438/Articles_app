@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подтверждение регистрации</title>
+    <style type="text/css">
+        /* Инлайновые стили для лучшей совместимости */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eeeeee;
+        }
+        .logo {
+            max-width: 150px;
+            height: auto;
+        }
+        .content {
+            padding: 20px 0;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #4CAF50;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        .footer {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #eeeeee;
+            font-size: 12px;
+            color: #999999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://example.com/logo.png" alt="Логотип" class="logo">
+            <h1>Подтвердите ваш email</h1>
+        </div>
+
+        <div class="content">
+            <p>Здравствуйте, {{full_name}}!</p>
+            <p>Благодарим вас за регистрацию в нашем сервисе. Для завершения регистрации, пожалуйста, подтвердите ваш email-адрес.</p>
+
+            <p style="text-align: center;">
+                <a href="#" class="button">Подтвердить email</a>
+            </p>
+
+            <p>Если вы не регистрировались в нашем сервисе, пожалуйста, проигнорируйте это письмо.</p>
+        </div>
+
+        <div class="footer">
+            <p>© {{current_year}} Articles app. Все права защищены.</p>
+            <p>
+                <a href="#" style="color: #999999;">Отписаться</a>
+                <a href="#" style="color: #999999;">Помощь</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

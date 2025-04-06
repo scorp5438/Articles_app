@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from typing import Optional
+from pathlib import Path
 
 from sqlalchemy.orm import Session
 from sqlalchemy.future import select
@@ -9,7 +10,7 @@ from fastapi import (Depends,
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from argon2 import PasswordHasher
-
+# from fastapi_mail import ConnectionConfig
 from backend.db.models.user import (User,
                                     Token)
 from backend.db.session import get_db
@@ -24,6 +25,19 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/login')
 
 # Контекст для хэширования паролей
 ph = PasswordHasher()
+
+# Конфигурация email
+# conf = ConnectionConfig(
+#     MAIL_USERNAME='order_system@mail.ru',
+#     MAIL_PASSWORD='56R6ASz5pSeeDYuETz6v',
+#     MAIL_FROM='order_system@mail.ru',
+#     MAIL_PORT=465,
+#     MAIL_SERVER='smtp.mail.ru',
+#     MAIL_STARTTLS=False,
+#     MAIL_SSL_TLS=True,
+#     MAIL_FROM_NAME='Articles app',
+#     TEMPLATE_FOLDER=Path('backend/email/templates'),
+# )
 
 
 # Функция для создания JWT-токена

@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from api.v1.endpoints.articles import router as articles_router
 from api.v1.endpoints.auth import router as auth_router
 from api.v1.endpoints.comments import router as comments_router
+from api.v1.endpoints.users import router as users_router
 import uvicorn
 
 from db.session import create_tables
@@ -19,6 +20,7 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(articles_router)
 app.include_router(auth_router)
 app.include_router(comments_router)
+app.include_router(users_router)
 
 
 @app.get('/')
