@@ -6,9 +6,13 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.future import select
 from pydantic import EmailStr
-from backend.core.security import get_password_hash
+from backend.core.security import (get_password_hash,
+                                   generate_timestamp_link,
+                                   host,
+                                   port,
+                                   verify_timestamp_link)
 from backend.db.models.user import User, Token
-# from backend.email.email import send_email
+from backend.my_email.my_email import send_email
 from backend.schemas.user import (UserCreate,
                                   UserResponse,
                                   UserUpdate)
@@ -71,24 +75,54 @@ async def create(user: UserCreate, db: Session):
         )
 
     hashed_password = get_password_hash(user.password)
+    full_link = generate_timestamp_link()
+    rand_part, *_ = full_link.split('_')
 
+    confirmation_url = f"http://{host}:{port}/auth/reg-confirm/{full_link}"
     new_user = User(
         email=user.email,
         hashed_password=hashed_password,
         full_name=user.full_name,
-        is_active=True,
+        conf_reg_link=rand_part,
     )
     db.add(new_user)
     await db.commit()
     await db.refresh(new_user)
 
-    # await send_email(
-    #     new_user,
-    #     'Подтверждение регистрации',
-    #     'reg_confirm.html'
-    # )
+    await send_email(
+        new_user,
+        'Подтверждение регистрации',
+        'reg_confirm.html',
+        confirmation_url
+    )
 
     return {'message': 'Successfully registered', 'status': status.HTTP_201_CREATED}
+
+
+async def activate(token: str, db: Session):
+    rand_part, *_ = token.split('_')
+    result = await db.execute(select(User).filter(User.conf_reg_link == rand_part))
+    db_user = result.scalars().first()
+
+    if not db_user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='Confirm token invalid'
+        )
+
+    if not verify_timestamp_link(token):
+        raise HTTPException(
+            status_code=status.HTTP_408_REQUEST_TIMEOUT,
+            detail='Token expired'
+        )
+
+    db_user.is_active = True
+    db_user.conf_reg_link = None
+
+    await db.commit()
+    await db.refresh(db_user)
+
+    return {'message': 'User activate'}
 
 
 async def read(db: Session):

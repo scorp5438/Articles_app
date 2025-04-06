@@ -22,6 +22,7 @@ class User(Base):
     created_at = Column(Date, server_default=func.now(), index=True)
     avatar_url = Column(String, nullable=True, index=True)
     is_staff = Column(Boolean, default=False, index=True)
+    conf_reg_link = Column(String, nullable=True, unique=True, index=True)
 
     # Отношение "один ко многим" с моделью Article
     articles = relationship('Article', back_populates='author')

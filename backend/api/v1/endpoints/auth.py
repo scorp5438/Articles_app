@@ -5,7 +5,6 @@ from fastapi import (APIRouter,
                      status)
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-
 from backend.core.security import (verify_password,
                                    ACCESS_TOKEN_EXPIRE_MINUTES,
                                    create_access_token,
@@ -17,7 +16,8 @@ from backend.schemas.user import (Token,
 from backend.crud.user import (create,
                                get_user,
                                add_token,
-                               del_token)
+                               del_token,
+                               activate)
 
 router = APIRouter(prefix='/auth', tags=['auth'])
 
@@ -31,13 +31,13 @@ async def login(
     if not db_user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='Incorrect email or password'
+            detail='Incorrect my_email or password'
         )
 
     if not verify_password(form_data.password, db_user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
+            detail="Incorrect my_email or password",
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
@@ -56,3 +56,11 @@ async def logout(token: str = Depends(oauth2_scheme), db: Session = Depends(get_
 @router.post('/register')
 async def register(user: UserCreate, db: Session = Depends(get_db)):
     return await create(user, db)
+
+
+@router.get('/reg-confirm/{full_link}')
+async def reg_confirm(
+        full_link: str,
+        db: Session = Depends(get_db)
+):
+    return await activate(full_link, db)

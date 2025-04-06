@@ -7,6 +7,8 @@ from api.v1.endpoints.comments import router as comments_router
 from api.v1.endpoints.users import router as users_router
 import uvicorn
 
+from backend.core.config import BASE_DIR
+from backend.core.security import host, port
 from db.session import create_tables
 
 
@@ -25,8 +27,9 @@ app.include_router(users_router)
 
 @app.get('/')
 async def root():
+    print(BASE_DIR)
     return {'message': 'Welcome to the Articles API!'}
 
 
 if __name__ == '__main__':
-    uvicorn.run('main:app', host='0.0.0.0', port=8080, reload=True)
+    uvicorn.run('main:app', host=host, port=port, reload=True)
