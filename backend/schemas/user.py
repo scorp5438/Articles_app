@@ -1,14 +1,13 @@
 import re
+from typing import Optional
+from datetime import date
 
 from pydantic import (BaseModel,
                       EmailStr,
                       Field,
                       field_validator)
-from typing import Optional
-from datetime import date
 
-PATTERN_FULL = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%#?&]{8,}$'
-PATTERN_LITE = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$'
+from backend.core.config import PATTERN_LITE
 
 
 class UserCreate(BaseModel):

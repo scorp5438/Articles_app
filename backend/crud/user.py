@@ -7,10 +7,10 @@ from sqlalchemy.orm import Session
 from sqlalchemy.future import select
 from pydantic import EmailStr
 from backend.core.security import (get_password_hash,
-                                   generate_timestamp_link,
-                                   host,
-                                   port,
-                                   verify_timestamp_link)
+                                   verify_timestamp_link,
+                                   generate_timestamp_link)
+from backend.core.config import (HOST,
+                                 PORT)
 from backend.db.models.user import User, Token
 from backend.my_email.my_email import send_email
 from backend.schemas.user import (UserCreate,
@@ -78,7 +78,7 @@ async def create(user: UserCreate, db: Session):
     full_link = generate_timestamp_link()
     rand_part, *_ = full_link.split('_')
 
-    confirmation_url = f"http://{host}:{port}/auth/reg-confirm/{full_link}"
+    confirmation_url = f"http://{HOST}:{PORT}/auth/reg-confirm/{full_link}"
     new_user = User(
         email=user.email,
         hashed_password=hashed_password,

@@ -2,7 +2,7 @@ import datetime
 
 from fastapi_mail import FastMail, MessageSchema, MessageType
 
-from backend.core.security import conf
+from backend.core.config import CONF
 from backend.db.models import User
 
 
@@ -24,7 +24,7 @@ async def send_email(
         subtype=MessageType.html
     )
 
-    fm = FastMail(conf)
+    fm = FastMail(CONF)
     await fm.send_message(
         message,
         template_name=template_name

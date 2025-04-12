@@ -2,9 +2,9 @@ services:
   db:
     image: postgres:17
     environment:
-      POSTGRES_DB: articles_db
-      POSTGRES_USER: user_art
-      POSTGRES_PASSWORD: 1324
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       PORT: 5432
     ports:
       - '5432:5432'

@@ -6,9 +6,9 @@ from fastapi import (APIRouter,
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from backend.core.security import (verify_password,
-                                   ACCESS_TOKEN_EXPIRE_MINUTES,
                                    create_access_token,
                                    oauth2_scheme)
+from backend.core.config import ACCESS_TOKEN_EXPIRE_MINUTES
 from backend.db.session import get_db
 from backend.schemas.user import (Token,
                                   UserCreate)

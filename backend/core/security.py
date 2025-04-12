@@ -11,40 +11,20 @@ from fastapi import (Depends,
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from argon2 import PasswordHasher
-from fastapi_mail import ConnectionConfig
 
-from backend.core.config import BASE_DIR
 from backend.db.models.user import (User,
                                     Token)
 from backend.db.session import get_db
 from backend.schemas.user import TokenData
-
-# Секретный ключ для подписи JWT
-SECRET_KEY = 'VPVU3KCIYEKHb2BtaJlHYbpNeSAwEGYmViccL36NhceY1NQksHfv6KJ3/siNtKJr'
-ALGORITHM = 'HS256'
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+from backend.core.config import  SECRET_KEY, ALGORITHM
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/login')
 
 # Контекст для хэширования паролей
 ph = PasswordHasher()
 
-# urls config
-host = '0.0.0.0'
-port = 8080
-
 # Конфигурация my_email
-conf = ConnectionConfig(
-    MAIL_USERNAME='order_system@mail.ru',
-    MAIL_PASSWORD='56R6ASz5pSeeDYuETz6v',
-    MAIL_FROM='order_system@mail.ru',
-    MAIL_PORT=465,
-    MAIL_SERVER='smtp.mail.ru',
-    MAIL_STARTTLS=False,
-    MAIL_SSL_TLS=True,
-    MAIL_FROM_NAME='Articles app',
-    TEMPLATE_FOLDER=(BASE_DIR / 'my_email/templates'),
-)
+
 
 
 # Функция для создания JWT-токена
@@ -53,7 +33,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=30)
     to_encode.update({'exp': expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
