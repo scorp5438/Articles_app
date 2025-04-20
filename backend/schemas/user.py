@@ -1,5 +1,6 @@
 import re
-from typing import Optional
+from typing import (Optional,
+                    Self)
 from datetime import date
 
 from pydantic import (BaseModel,
@@ -8,6 +9,7 @@ from pydantic import (BaseModel,
                       field_validator)
 
 from backend.core.config import PATTERN_LITE
+from backend.db.models.user import User
 
 
 class UserCreate(BaseModel):
@@ -22,6 +24,18 @@ class UserCreate(BaseModel):
         if re.match(PATTERN_LITE, password) is None:
             raise ValueError('Password must contain at least one digit')
         return password
+
+
+class UserForEmail(BaseModel):
+    email: EmailStr
+    full_name: str = Field(min_length=3, max_length=30)
+
+    @classmethod
+    def from_orm(cls, user: User) -> Self:
+        return cls(
+            email=user.email,
+            full_name=user.full_name
+        )
 
 
 class UserResponse(BaseModel):

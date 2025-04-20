@@ -23,7 +23,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/login')
 # Контекст для хэширования паролей
 ph = PasswordHasher()
 
-# Конфигурация my_email
+# Конфигурация fast_api_email
 
 
 

@@ -11,6 +11,5 @@ services:
     volumes:
       - postgres_articles:/var/lib/postgresql/data
 
-
 volumes:
   postgres_articles:

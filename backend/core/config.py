@@ -39,7 +39,7 @@ CONF = ConnectionConfig(
     MAIL_STARTTLS=False,
     MAIL_SSL_TLS=True,
     MAIL_FROM_NAME='Articles app',
-    TEMPLATE_FOLDER=(BASE_DIR / 'my_email/templates'),
+    TEMPLATE_FOLDER=(BASE_DIR / 'fast_api_email/templates'),
 )
 
 # Настройки сложности пароля

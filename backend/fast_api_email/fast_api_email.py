@@ -3,21 +3,20 @@ import datetime
 from fastapi_mail import FastMail, MessageSchema, MessageType
 
 from backend.core.config import CONF
-from backend.db.models import User
+from backend.schemas.user import UserForEmail
 
 
 async def send_email(
-        user: User,
+        user: UserForEmail,
         subject: str,
         template_name: str,
         link: str
 ) -> None:
-
     message = MessageSchema(
         subject=subject,
         recipients=[user.email],
         template_body={
-            'full_name':user.full_name,
+            'full_name': user.full_name,
             'current_year': datetime.datetime.now().year,
             'link': link
         },

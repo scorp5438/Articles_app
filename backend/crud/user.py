@@ -12,10 +12,11 @@ from backend.core.security import (get_password_hash,
 from backend.core.config import (HOST,
                                  PORT)
 from backend.db.models.user import User, Token
-from backend.my_email.my_email import send_email
+
 from backend.schemas.user import (UserCreate,
                                   UserResponse,
-                                  UserUpdate)
+                                  UserUpdate, UserForEmail)
+from backend.tasks.email_tasks import send_email_task
 
 
 async def get_user(db: Session, user_id: int = None, user_email: EmailStr | str = None):
@@ -89,13 +90,13 @@ async def create(user: UserCreate, db: Session):
     await db.commit()
     await db.refresh(new_user)
 
-    await send_email(
-        new_user,
-        'Подтверждение регистрации',
-        'reg_confirm.html',
-        confirmation_url
+    user_data = UserForEmail.from_orm(new_user).model_dump()
+    send_email_task.delay(
+        user=user_data,
+        subject='Подтверждение регистрации',
+        template_name='reg_confirm.html',
+        link=confirmation_url
     )
-
     return {'message': 'Successfully registered', 'status': status.HTTP_201_CREATED}
 
 
