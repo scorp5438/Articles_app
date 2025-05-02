@@ -11,13 +11,13 @@ from backend.core.config import HOST, PORT
 from db.session import create_tables
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    await create_tables()
-    yield
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     await create_tables()
+#     yield
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI()
 app.include_router(articles_router)
 app.include_router(auth_router)
 app.include_router(comments_router)

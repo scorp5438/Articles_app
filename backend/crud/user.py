@@ -89,9 +89,9 @@ async def create(user: UserCreate, db: Session):
     db.add(new_user)
     await db.commit()
     await db.refresh(new_user)
-
-    user_data = UserForEmail.from_orm(new_user).model_dump()
-    send_email_task.delay(
+    # .model_dump()
+    user_data = UserForEmail.from_orm(new_user)
+    await send_email_task(
         user=user_data,
         subject='Подтверждение регистрации',
         template_name='reg_confirm.html',
