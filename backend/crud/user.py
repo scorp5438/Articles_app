@@ -89,7 +89,7 @@ async def create(user: UserCreate, db: Session):
     db.add(new_user)
     await db.commit()
     await db.refresh(new_user)
-    # .model_dump()
+
     user_data = UserForEmail.from_orm(new_user)
     await send_email_task(
         user=user_data,

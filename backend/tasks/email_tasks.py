@@ -1,5 +1,3 @@
-from asgiref.sync import sync_to_async
-
 from backend.schemas.user import UserForEmail
 from backend.fast_api_email.fast_api_email import send_email
 from .celery_app import celery_app
