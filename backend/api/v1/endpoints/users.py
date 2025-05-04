@@ -21,15 +21,21 @@ async def get_users(
         db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user)
 ):
-    return await read(db)
+    return await read(db, current_user, user_list=True)
 
+@router.get('/profile', response_model=UserResponse)
+async def profile(
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user)
+):
+    return await read(db, current_user)
 
 @router.patch('/update/{user_id:int}')
 async def update_user(
         data: UserUpdate, user_id: int, db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user)
 ):
-    return await update(data, user_id, db)
+    return await update(user_id, current_user, db, data )
 
 
 @router.delete('/delete/{user_id:int}')
@@ -37,4 +43,4 @@ async def delete_user(
         user_id: int, db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user)
 ):
-    return await delete(user_id, db)
+    return await delete(user_id, current_user, db)

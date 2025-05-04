@@ -23,9 +23,7 @@ async def create_article(
         db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user)
 ):
-    current_user_id = current_user.id
-
-    return await create(current_user_id, article, db)
+    return await create(current_user, article, db)
 
 
 @router.get('/', response_model=List[ArticleResponse])

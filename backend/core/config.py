@@ -1,4 +1,5 @@
 import os
+from logging.config import dictConfig
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -46,3 +47,51 @@ CONF = ConnectionConfig(
 
 PATTERN_FULL = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%#?&]{8,}$'
 PATTERN_LITE = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$'
+
+logs_dir = os.path.join(BASE_DIR, 'logs')
+os.makedirs(logs_dir, exist_ok=True)
+
+logging_config = {
+    'version': 1,
+    'formatters': {
+        'standard': {
+            'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': os.getenv('LOG_LEVEL_STREAM', 'DEBUG'),
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard',
+            'stream': 'ext://sys.stdout'
+        },
+        'file': {
+            'level': os.getenv('LOG_LEVEL_FILE', 'INFO'),
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'standard',
+            'filename': os.path.join(BASE_DIR, 'logs', 'articles_app.log'),
+            'maxBytes': 10485760,  # 10 MB
+            'backupCount': 5,
+            'encoding': 'utf8'
+        },
+    },
+    'loggers': {
+        'console_logger': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+        'file_logger': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': False
+        }
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO'
+    }
+}
+
+dictConfig(logging_config)

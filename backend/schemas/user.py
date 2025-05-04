@@ -6,7 +6,8 @@ from datetime import date
 from pydantic import (BaseModel,
                       EmailStr,
                       Field,
-                      field_validator)
+                      field_validator,
+                      ConfigDict)
 
 from backend.core.config import PATTERN_LITE
 from backend.db.models.user import User
@@ -30,12 +31,14 @@ class UserForEmail(BaseModel):
     email: EmailStr
     full_name: str = Field(min_length=3, max_length=30)
 
-    @classmethod
-    def from_orm(cls, user: User) -> Self:
-        return cls(
-            email=user.email,
-            full_name=user.full_name
-        )
+    model_config = ConfigDict(from_attributes=True)
+
+    # @classmethod
+    # def from_orm(cls, user: User) -> Self:
+    #     return cls(
+    #         email=user.email,
+    #         full_name=user.full_name
+    #     )
 
 
 class UserResponse(BaseModel):
@@ -47,6 +50,18 @@ class UserResponse(BaseModel):
     is_staff: Optional[bool]
     avatar_url: Optional[str]
 
+    model_config = ConfigDict(from_attributes=True)
+    # @classmethod
+    # def from_orm(cls, user: User) -> Self:
+    #     return cls(
+    #         id=user.id,
+    #         email=user.email,
+    #         full_name=user.full_name,
+    #         is_active=user.is_active,
+    #         created_at=user.created_at,
+    #         is_staff=user.is_staff,
+    #         avatar_url=user.avatar_url
+    #     )
 
 class UserUpdate(BaseModel):
     email: Optional[EmailStr] = None

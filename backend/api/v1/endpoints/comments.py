@@ -22,7 +22,7 @@ async def create_comment(
         db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user)
 ):
-    return await create(comment, current_user, db)
+    return await create(current_user, comment, db)
 
 
 @router.get('/{article_id:int}', response_model=List[CommentResponse])
