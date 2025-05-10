@@ -1,10 +1,11 @@
 import logging
 from typing import Optional
 
-from fastapi import status
+from fastapi import (HTTPException,
+                     status)
 from sqlalchemy.orm import Session
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+
 
 from backend.core.decorators import (check_user_permissions,
                                      check_is_activate_permissions)
@@ -23,9 +24,14 @@ async def get_article(db: Session, article_id: Optional[int] = None):
         result = await db.execute(select(Article).order_by(Article.id))
         return result.scalars().all()
 
-    result = await db.execute(select(Article).filter(Article.id == article_id))
+    result = await db.execute(select(Article).where(Article.id == article_id).execution_options(populate_existing=True))
     article = result.scalars().first()
-
+    if article is None:
+        logger_file.warning('Article not found')
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='article not found'
+        )
     return article
 
 
@@ -98,7 +104,7 @@ async def update(
 async def delete(
         article_id: int,
         current_user: User,
-        db: AsyncSession
+        db: Session
 ):
     article = await get_article(db, article_id)
 

@@ -11,6 +11,7 @@ from backend.db.models import User
 from backend.schemas.comment import (CommentCreate,
                                      CommentResponse)
 from backend.db.models.comment import Comment
+from crud.articles import get_article
 
 logger_console = logging.getLogger('console_logger')
 logger_file = logging.getLogger('file_logger')
@@ -22,6 +23,7 @@ async def create(
         comment: CommentCreate,
         db: Session
 ):
+    await get_article(db, comment.article_id)
     comment_db = Comment(
         content=comment.content,
         article_id=comment.article_id,

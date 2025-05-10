@@ -22,4 +22,4 @@ class Article(Base):
     author = relationship('User', back_populates='articles')
 
     # Связь с моделью Comment (один ко многим)
-    comments = relationship('Comment', back_populates='article')
+    comments = relationship('Comment', back_populates='article', cascade='all, delete-orphan')

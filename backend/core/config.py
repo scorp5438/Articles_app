@@ -70,7 +70,7 @@ logging_config = {
             'level': os.getenv('LOG_LEVEL_FILE', 'INFO'),
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'standard',
-            'filename': os.path.join(BASE_DIR, 'logs', 'articles_app.log'),
+            'filename': str(BASE_DIR / 'logs' / 'articles_app.log'),
             'maxBytes': 10485760,  # 10 MB
             'backupCount': 5,
             'encoding': 'utf8'
@@ -84,7 +84,7 @@ logging_config = {
         },
         'file_logger': {
             'handlers': ['file'],
-            'level': 'ERROR',
+            'level': 'WARNING',
             'propagate': False
         }
     },
