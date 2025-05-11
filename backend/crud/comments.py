@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from fastapi import status
 
 from sqlalchemy.future import select
+
 from backend.core.decorators import (check_user_permissions,
                                      check_is_activate_permissions)
 from backend.crud.user import get_user
@@ -11,7 +12,7 @@ from backend.db.models import User
 from backend.schemas.comment import (CommentCreate,
                                      CommentResponse)
 from backend.db.models.comment import Comment
-from crud.articles import get_article
+from backend.crud.articles import get_article
 
 logger_console = logging.getLogger('console_logger')
 logger_file = logging.getLogger('file_logger')

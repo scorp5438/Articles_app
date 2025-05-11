@@ -8,6 +8,7 @@ from fastapi import (HTTPException,
 from sqlalchemy.orm import Session
 from sqlalchemy.future import select
 from pydantic import EmailStr
+
 from backend.core.security import (get_password_hash,
                                    verify_timestamp_link,
                                    generate_timestamp_link)
@@ -21,7 +22,7 @@ from backend.schemas.user import (UserCreate,
                                   UserUpdate,
                                   UserForEmail)
 from backend.tasks.email_tasks import send_email_task
-from core.decorators import check_is_staff_or_self_permissions
+from backend.core.decorators import check_is_staff_or_self_permissions
 
 logger_console = logging.getLogger('console_logger')
 logger_file = logging.getLogger('file_logger')
@@ -30,12 +31,22 @@ logger_file = logging.getLogger('file_logger')
 async def get_user(db: Session, user_id: int = None, user_email: EmailStr | str = None):
     if user_id:
         result = await db.execute(select(User).filter(User.id == user_id))
+        user = result.scalars().first()
     elif user_email:
         result = await db.execute(select(User).filter(User.email == user_email))
+        user = result.scalars().first()
     else:
         result = await db.execute(select(User).order_by(User.id))
         return result.scalars().all()
-    return result.scalars().first()
+
+    if user is None:
+        logger_file.warning('User not found')
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='user not found'
+        )
+
+    return user
 
 
 async def get_token(token: str, db: Session):

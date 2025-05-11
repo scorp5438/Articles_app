@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import (create_async_engine,
 from sqlalchemy.orm import (sessionmaker,
                             declarative_base)
 
-from core.config import SQLALCHEMY_DATABASE_URL
+from backend.core.config import SQLALCHEMY_DATABASE_URL
 
 # Создайте движок SQLAlchemy
 engine = create_async_engine(SQLALCHEMY_DATABASE_URL)

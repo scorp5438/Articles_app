@@ -11,7 +11,7 @@ from fastapi import (status,
 from backend.db.models import User
 from backend.db.session import Base
 from backend.schemas.article import ArticleUpdate
-from schemas.user import UserUpdate
+from backend.schemas.user import UserUpdate
 
 logger_console = logging.getLogger('console_logger')
 logger_file = logging.getLogger('file_logger')

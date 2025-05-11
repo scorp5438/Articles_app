@@ -56,8 +56,7 @@ async def create(
 
 
 async def read(db: Session):
-    result = await db.execute(select(Article).order_by(Article.id))
-    articles = result.scalars().all()
+    articles = await get_article(db)
 
     article_response = []
     for article in articles:

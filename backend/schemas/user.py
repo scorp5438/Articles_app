@@ -1,6 +1,5 @@
 import re
-from typing import (Optional,
-                    Self)
+from typing import Optional
 from datetime import date
 
 from pydantic import (BaseModel,
@@ -10,7 +9,6 @@ from pydantic import (BaseModel,
                       ConfigDict)
 
 from backend.core.config import PATTERN_LITE
-from backend.db.models.user import User
 
 
 class UserCreate(BaseModel):
@@ -33,13 +31,6 @@ class UserForEmail(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-    # @classmethod
-    # def from_orm(cls, user: User) -> Self:
-    #     return cls(
-    #         email=user.email,
-    #         full_name=user.full_name
-    #     )
-
 
 class UserResponse(BaseModel):
     id: int
@@ -51,17 +42,7 @@ class UserResponse(BaseModel):
     avatar_url: Optional[str]
 
     model_config = ConfigDict(from_attributes=True)
-    # @classmethod
-    # def from_orm(cls, user: User) -> Self:
-    #     return cls(
-    #         id=user.id,
-    #         email=user.email,
-    #         full_name=user.full_name,
-    #         is_active=user.is_active,
-    #         created_at=user.created_at,
-    #         is_staff=user.is_staff,
-    #         avatar_url=user.avatar_url
-    #     )
+
 
 class UserUpdate(BaseModel):
     email: Optional[EmailStr] = None

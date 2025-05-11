@@ -5,6 +5,7 @@ from sqlalchemy import (Column,
                         ForeignKey,
                         func)
 from sqlalchemy.orm import relationship
+
 from ..session import Base
 
 
