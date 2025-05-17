@@ -27,7 +27,7 @@ async def db_session():
 
 
 @pytest.fixture
-async def test_data_art(db_session):
+async def test_data(db_session):
     test_user_hashed_password = get_password_hash('Qwerty741')
     test_users = [
         User(
@@ -43,6 +43,21 @@ async def test_data_art(db_session):
             full_name='test_user_2',
             conf_reg_link=None,
             is_active=True
+        ),
+        User(
+            email='test_user_3@mail.ru',
+            hashed_password=test_user_hashed_password,
+            full_name='test_user_3',
+            conf_reg_link=None,
+            is_active=False
+        ),
+        User(
+            email='test_user_is_staff@mail.ru',
+            hashed_password=test_user_hashed_password,
+            full_name='test_user_is_staff',
+            conf_reg_link=None,
+            is_active=False,
+            is_staff=True
         )
     ]
 
@@ -70,3 +85,4 @@ async def test_data_art(db_session):
 
     for article in articles:
         await db_session.refresh(article)
+    return {'users': test_users}

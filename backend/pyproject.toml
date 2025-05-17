@@ -29,6 +29,7 @@ asgiref = ">=3.8.1,<4.0.0"
 gevent = "^25.4.2"
 pytest = "^8.3.5"
 pytest-asyncio = "^0.26.0"
+pytest-mock = "^3.14.0"
 
 
 [build-system]

@@ -38,7 +38,7 @@ class UserResponse(BaseModel):
     full_name: str
     is_active: bool
     created_at: date
-    is_staff: Optional[bool]
+    is_staff: bool
     avatar_url: Optional[str]
 
     model_config = ConfigDict(from_attributes=True)

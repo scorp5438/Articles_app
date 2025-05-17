@@ -32,6 +32,12 @@ async def get_user(db: Session, user_id: int = None, user_email: EmailStr | str 
     if user_id:
         result = await db.execute(select(User).filter(User.id == user_id))
         user = result.scalars().first()
+        if user is None:
+            logger_file.warning('User not found')
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail='user not found'
+            )
     elif user_email:
         result = await db.execute(select(User).filter(User.email == user_email))
         user = result.scalars().first()
@@ -39,12 +45,7 @@ async def get_user(db: Session, user_id: int = None, user_email: EmailStr | str 
         result = await db.execute(select(User).order_by(User.id))
         return result.scalars().all()
 
-    if user is None:
-        logger_file.warning('User not found')
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail='user not found'
-        )
+
 
     return user
 
@@ -174,7 +175,7 @@ async def read(db: Session, current_user: User, user_list=False):
     else:
         logger_file.warning('You don`t have permission')
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
+            status_code=status.HTTP_403_FORBIDDEN,
             detail='You don`t have permission'
         )
     return user_response
