@@ -38,9 +38,9 @@ async def test_create_articles(db_session, test_data):
     assert response.get('message') == 'Article created'
     assert response.get('status') == 201
 
+
 @pytest.mark.asyncio
 async def test_create_articles_by_not_is_active(db_session, test_data):
-    ...
     article = ArticleCreate(
         title='New article create in test',
         content='Anything text sor article'
@@ -67,6 +67,26 @@ async def test_read_articles(db_session, test_data):
 
 
 @pytest.mark.asyncio
+async def test_read_article_into_id(db_session, test_data):
+    article_id = 1
+    articles = await read(db_session, article_id)
+
+    assert articles.title == 'Test Articles with user'
+    assert articles.author_name == 'test_user_1'
+
+
+@pytest.mark.asyncio
+async def test_read_article_into_id_not_exist(db_session, test_data):
+    article_id = 3
+
+    with pytest.raises(HTTPException) as e:
+        await read(db_session, article_id)
+
+    assert e.value.status_code == 404
+    assert e.value.detail == 'article not found'
+
+
+@pytest.mark.asyncio
 async def test_update_articles(db_session, test_data):
     article_id = 1
     data = ArticleUpdate(
@@ -79,7 +99,8 @@ async def test_update_articles(db_session, test_data):
 
     assert articles.get('message') == 'Article updated'
     assert articles.get('status') == 200
-    assert update_article[0].content == 'A new content after update'
+    assert 'A new content after update' in update_article[0].content
+
 
 @pytest.mark.asyncio
 async def test_update_articles_not_by_author(db_session, test_data):

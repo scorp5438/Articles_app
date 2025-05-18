@@ -6,7 +6,6 @@ from fastapi import (HTTPException,
 from sqlalchemy.orm import Session
 from sqlalchemy.future import select
 
-
 from backend.core.decorators import (check_user_permissions,
                                      check_is_activate_permissions)
 from backend.crud.user import get_user
@@ -35,6 +34,13 @@ async def get_article(db: Session, article_id: Optional[int] = None):
     return article
 
 
+async def get_article_author_name(db: Session, author_id: Optional[int] = None) -> str:
+    if author_id is not None:
+        user = await get_user(db, user_id=author_id)
+        return user.full_name
+    return 'Удаленный пользователь'
+
+
 @check_is_activate_permissions(schema=ArticleCreate)
 async def create(
         current_user: User,
@@ -55,25 +61,32 @@ async def create(
     return {'message': 'Article created', 'status': status.HTTP_201_CREATED}
 
 
-async def read(db: Session):
-    articles = await get_article(db)
-
-    article_response = []
-    for article in articles:
-        if article.author_id is not None:
-            user = await get_user(db, user_id=article.author_id)
-            author_name = user.full_name
-        else:
-            author_name = 'Удаленный пользователь'
-        article_response.append(
-            ArticleResponse(
-                id=article.id,
-                title=article.title,
-                content=article.content,
-                author_name=author_name,
-                created_at=article.created_at,
-                updated_at=article.updated_at,
-            ))
+async def read(db: Session, article_id: Optional[int] = None):
+    if article_id:
+        article = await get_article(db, article_id)
+        author_name = await get_article_author_name(db, article.author_id)
+        article_response = ArticleResponse(
+            id=article.id,
+            title=article.title,
+            content=article.content,
+            author_name=author_name,
+            created_at=article.created_at,
+            updated_at=article.updated_at,
+        )
+    else:
+        articles = await get_article(db)
+        article_response = []
+        for article in articles:
+            author_name = await get_article_author_name(db, article.author_id)
+            article_response.append(
+                ArticleResponse(
+                    id=article.id,
+                    title=article.title,
+                    content=f'{article.content[:48]}...',
+                    author_name=author_name,
+                    created_at=article.created_at,
+                    updated_at=article.updated_at,
+                ))
 
     return article_response
 
