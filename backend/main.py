@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 import uvicorn
 
-from api.v1.endpoints.articles import router as articles_router
-from api.v1.endpoints.auth import router as auth_router
-from api.v1.endpoints.comments import router as comments_router
-from api.v1.endpoints.users import router as users_router
+from backend.api.v1.endpoints.auth import router as auth_router
+from backend.api.v1.endpoints.users import router as users_router
+from backend.api.v1.endpoints.articles import router as articles_router
+from backend.api.v1.endpoints.comments import router as comments_router
 from backend.core.config import HOST, PORT
 # from db.session import create_tables
 
