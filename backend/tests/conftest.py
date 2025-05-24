@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from fastapi import FastAPI
 from async_asgi_testclient import TestClient
 
-from backend.core.security import get_password_hash
+from backend.core.security import get_password_hash, generate_timestamp_link
 from backend.db.models.user import User
 from backend.db.models.article import Article
 from backend.db.models.comment import Comment
@@ -20,7 +20,6 @@ app.include_router(users_router)
 app.include_router(articles_router)
 app.include_router(comments_router)
 
-client = TestClient(app)
 
 TEST_DATABASE_URL = 'postgresql+asyncpg://test_user:test_password@localhost/test_db'
 
@@ -52,6 +51,9 @@ async def db_session():
 @pytest.fixture
 async def test_data(db_session):
     test_user_hashed_password = get_password_hash('Qwerty741')
+    full_link = generate_timestamp_link()
+    rand_part, *_ = full_link.split('_')
+
     test_users = [
         User(
             email='test_user_1@mail.ru',
@@ -71,7 +73,7 @@ async def test_data(db_session):
             email='test_user_3@mail.ru',
             hashed_password=test_user_hashed_password,
             full_name='test_user_3',
-            conf_reg_link=None,
+            conf_reg_link=rand_part,
             is_active=False
         ),
         User(
@@ -79,7 +81,7 @@ async def test_data(db_session):
             hashed_password=test_user_hashed_password,
             full_name='test_user_is_staff',
             conf_reg_link=None,
-            is_active=False,
+            is_active=True,
             is_staff=True
         )
     ]
@@ -132,4 +134,4 @@ async def test_data(db_session):
     for comment in comments:
         await db_session.refresh(comment)
 
-    return {'users': test_users}
+    return {'users': test_users, 'full_link': full_link}

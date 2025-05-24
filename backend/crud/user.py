@@ -45,8 +45,6 @@ async def get_user(db: Session, user_id: int = None, user_email: EmailStr | str 
         result = await db.execute(select(User).order_by(User.id))
         return result.scalars().all()
 
-
-
     return user
 
 
