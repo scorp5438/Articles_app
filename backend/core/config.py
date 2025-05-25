@@ -22,9 +22,9 @@ PORT = 8080
 
 # Укажите URL вашей базы данных PostgreSQL
 
-POSTGRES_USER = os.getenv('POSTGRES_USER')
-POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
-POSTGRES_DB = os.getenv('POSTGRES_DB')
+POSTGRES_USER = os.getenv('POSTGRES_USER', 'test_article_user')
+POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD', 'test_password')
+POSTGRES_DB = os.getenv('POSTGRES_DB', 'test_article_db')
 DB_HOST = os.getenv('DB_HOST')
 
 SQLALCHEMY_DATABASE_URL = f'postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{DB_HOST}/{POSTGRES_DB}'

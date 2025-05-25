@@ -8,20 +8,20 @@ from backend.tests.conftest import test_data
 from backend.db.models.user import Token
 
 
-# async def test_register_success(db_session):
-#     app.dependency_overrides[get_db] = lambda: db_session
-#     test_user = {
-#         'email': 'alex_77_90@mail.ru',
-#         'password': 'Qwerty741',
-#         'full_name': 'Test_user'
-#     }
-#     async with TestClient(app) as client:
-#         response = await client.post(f'{auth_router.prefix}/register', json=test_user)
-#         data = response.json()
-#
-#         assert response.status_code == 200
-#         assert data["message"] == 'Successfully registered'
-#         assert data["status"] == 201
+async def test_register_success(db_session):
+    app.dependency_overrides[get_db] = lambda: db_session
+    test_user = {
+        'email': 'alex_77_90@mail.ru',
+        'password': 'Qwerty741',
+        'full_name': 'Test_user'
+    }
+    async with TestClient(app) as client:
+        response = await client.post(f'{auth_router.prefix}/register', json=test_user)
+        data = response.json()
+
+        assert response.status_code == 200
+        assert data.get('message') == 'Successfully registered'
+        assert data.get('status') == 201
 
 
 async def test_activation_profile(db_session, test_data):
@@ -35,7 +35,7 @@ async def test_activation_profile(db_session, test_data):
         assert response.status_code == 200
         assert current_users[2].is_active == True
         assert current_users[2].conf_reg_link is None
-        assert data['message'] == 'User activate'
+        assert data.get('message') == 'User activate'
 
 
 async def test_activation_profile_token_expired(db_session, test_data):

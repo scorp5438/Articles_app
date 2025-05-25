@@ -83,7 +83,7 @@ async def test_read_article_into_id_not_exist(db_session, test_data):
         await read(db_session, article_id)
 
     assert e.value.status_code == 404
-    assert e.value.detail == 'article not found'
+    assert e.value.detail == 'Article not found'
 
 
 @pytest.mark.asyncio

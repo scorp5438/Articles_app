@@ -29,7 +29,7 @@ async def get_article(db: Session, article_id: Optional[int] = None):
         logger_file.warning('Article not found')
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail='article not found'
+            detail='Article not found'
         )
     return article
 

@@ -22,22 +22,22 @@ async def test_get_users(db_session, test_data):
     assert user_by_email.email == 'test_user_2@mail.ru'
 
 
-# @pytest.mark.asyncio
-# async def test_create_user(db_session, test_data):
-#     new_user = UserCreate(
-#         email='alex_77_90@mail.ru',
-#         password='Qwerty741',
-#         full_name='New Test User'
-#     )
-#
-#     users_before = await get_user(db_session)
-#     response = await create(new_user, db_session)
-#     users_after = await get_user(db_session)
-#
-#     assert len(users_before) == 4
-#     assert len(users_before) != len(users_after)
-#     assert response.get('message') == 'Successfully registered'
-#     assert response.get('status') == 201
+@pytest.mark.asyncio
+async def test_create_user(db_session, test_data):
+    new_user = UserCreate(
+        email='alex_77_90@mail.ru',
+        password='Qwerty741',
+        full_name='New Test User'
+    )
+
+    users_before = await get_user(db_session)
+    response = await create(new_user, db_session)
+    users_after = await get_user(db_session)
+
+    assert len(users_before) == 4
+    assert len(users_before) != len(users_after)
+    assert response.get('message') == 'Successfully registered'
+    assert response.get('status') == 201
 
 
 @pytest.mark.asyncio

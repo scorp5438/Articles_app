@@ -33,7 +33,7 @@ async def show_comment(article_id: int, db: Session = Depends(get_db)):
 # @router.patch('/')
 # async def update_comment():
 #     ...
-#
+
 
 @router.delete('/delete/{comment_id:int}')
 async def delete_comment(
