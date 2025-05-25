@@ -44,5 +44,5 @@ jobs:
 
       - name: Run tests
         run: |
-          cd backand
+          cd backend
           python -m pytest tests -v
