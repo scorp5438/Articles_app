@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-
       postgres:
         image: postgres:latest
         env:
@@ -41,9 +40,7 @@ jobs:
           cd backend
           poetry install --no-interaction --no-root
 
-
       - name: Run tests
         run: |
           cd backend
-          poetry add pytest --group test
-          python -m pytest tests -v
+          poetry run pytest tests -v
