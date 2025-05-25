@@ -39,7 +39,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd backend
-          poetry install --no-interaction --with=test
+          poetry install --no-interaction --no-root
 
 
       - name: Run tests
