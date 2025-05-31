@@ -184,6 +184,5 @@ def override_smtp_config():
 
 @pytest.fixture(scope='function')
 def clear_mailhog():
-    response = requests.delete('http://localhost:8025/api/v1/messages', timeout=1)
-    print(f"Delete response: {response.status_code}")
+    requests.delete('http://localhost:8025/api/v1/messages', timeout=1)
     yield
