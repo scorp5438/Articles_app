@@ -48,7 +48,7 @@ jobs:
           poetry install --no-interaction --no-root
 
       - name: Get MailHog logs
-        run: docker-compose logs mailhog
+        run: docker logs $(docker ps -q --filter "ancestor=mailhog/mailhog")
 
       - name: List running containers
         run: docker ps
