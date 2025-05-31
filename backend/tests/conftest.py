@@ -13,7 +13,7 @@ from backend.api.v1.endpoints.auth import router as auth_router
 from backend.api.v1.endpoints.users import router as users_router
 from backend.api.v1.endpoints.articles import router as articles_router
 from backend.api.v1.endpoints.comments import router as comments_router
-from crud.user import add_token
+from backend.crud.user import add_token
 
 app = FastAPI()
 app.include_router(auth_router)
