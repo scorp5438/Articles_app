@@ -66,7 +66,10 @@ jobs:
 
       - name: Check MailHog messages
         run: |
-          curl -s http://localhost:8025/api/v2/messages | jq .
+          curl -s http://localhost:8025/api/v2/messages | jq .;
+          echo $SMTP_SERVER
+          echo $SMTP_PORT
+          telnet localhost 1025
 
       - name: Run tests
         run: |
