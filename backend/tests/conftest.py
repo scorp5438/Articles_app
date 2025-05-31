@@ -1,3 +1,5 @@
+import os
+
 import requests
 
 import pytest
@@ -172,7 +174,11 @@ def override_smtp_config():
     CONF.MAIL_PASSWORD = SecretStr('')
     CONF.MAIL_FROM = 'test@example.com'
     CONF.MAIL_PORT = 1025
-    CONF.MAIL_SERVER = 'localhost'
+    # CONF.MAIL_SERVER = 'localhost'
+    if os.getenv('GITHUB_ACTIONS') == 'true':
+        CONF.MAIL_SERVER = 'mailhog'
+    else:
+        CONF.MAIL_SERVER = 'localhost'
     CONF.MAIL_STARTTLS = False
     CONF.MAIL_SSL_TLS = False
 

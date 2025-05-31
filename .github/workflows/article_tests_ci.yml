@@ -67,6 +67,6 @@ jobs:
       - name: Run tests
         run: |
           cd backend
-#          poetry run pytest tests/test_send_email -v
-          pytest tests/test_send_email -v
+          poetry run pytest tests/test_send_email -v
+
 
