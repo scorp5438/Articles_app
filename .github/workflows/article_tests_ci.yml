@@ -47,6 +47,12 @@ jobs:
           cd backend
           poetry install --no-interaction --no-root
 
+      - name: Get MailHog logs
+        run: docker-compose logs mailhog
+
+      - name: List running containers
+        run: docker ps
+
       - name: Run tests
         run: |
           cd backend

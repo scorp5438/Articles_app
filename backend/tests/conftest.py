@@ -169,7 +169,7 @@ def override_smtp_config():
     }
 
     CONF.MAIL_USERNAME = ''
-    CONF.MAIL_PASSWORD = SecretStr("")
+    CONF.MAIL_PASSWORD = SecretStr('')
     CONF.MAIL_FROM = 'test@example.com'
     CONF.MAIL_PORT = 1025
     CONF.MAIL_SERVER = 'localhost'
