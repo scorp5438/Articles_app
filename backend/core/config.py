@@ -41,6 +41,7 @@ CONF = ConnectionConfig(
     MAIL_SSL_TLS=True,
     MAIL_FROM_NAME='Articles app',
     TEMPLATE_FOLDER=(BASE_DIR / 'fast_api_email/templates'),
+    SUPPRESS_SEND=os.getenv('SUPPRESS_SEND', '1') == '1'
 )
 
 # Настройки сложности пароля
