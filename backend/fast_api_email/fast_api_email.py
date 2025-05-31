@@ -35,6 +35,5 @@ async def send_email(
             message,
             template_name=template_name
         )
-        print(f"Sending email to: {user.email}")
     except SMTPDataError as smtp:
         logger_file.warning(f'Ошибка данных SMTP: {smtp}')

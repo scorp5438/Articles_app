@@ -21,16 +21,9 @@ async def test_send_email_real_smtp(override_smtp_config, clear_mailhog):
         link='https://example.com'
     )
 
-    for _ in range(5):
-        response = requests.get("http://localhost:8025/api/v2/messages")
-        messages = response.json()
-        if messages["items"]:
-            break
-        await asyncio.sleep(1)
-    else:
-        pytest.fail("Письмо не появилось в MailHog после 5 секунд ожидания")
+    await asyncio.sleep(2)
 
-    # response = requests.get('http://localhost:8025/api/v2/messages')
+    response = requests.get('http://localhost:8025/api/v2/messages')
     messages = response.json()
     last_message = messages["items"][0]
     recipients = last_message.get('Content').get('Headers').get('To')
