@@ -6,6 +6,7 @@ from backend.schemas.user import UserForEmail
 from backend.fast_api_email.fast_api_email import send_email
 from backend.tests.conftest import override_smtp_config, clear_mailhog
 
+
 @pytest.mark.asyncio
 async def test_send_email_real_smtp(override_smtp_config, clear_mailhog):
     test_user = UserForEmail(
@@ -19,6 +20,8 @@ async def test_send_email_real_smtp(override_smtp_config, clear_mailhog):
         template_name='reg_confirm.html',
         link='https://example.com'
     )
+
+    await asyncio.sleep(2)
 
     response = requests.get('http://localhost:8025/api/v2/messages')
     messages = response.json()
