@@ -44,7 +44,7 @@ async def test_send_email_real_smtp(override_smtp_config, clear_mailhog):
         user=test_user,
         subject='Test Email',
         template_name='reg_confirm.html',
-        link='https://example.com'
+        link='https://test.com'
     )
 
     response = requests.get('http://localhost:8025/api/v2/messages')
