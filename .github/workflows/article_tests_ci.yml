@@ -26,7 +26,6 @@ jobs:
           - 8025:8025
           - 1025:1025
 
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -47,34 +46,9 @@ jobs:
           cd backend
           poetry install --no-interaction --no-root
 
-      - name: Get MailHog logs
-        run: docker logs $(docker ps -q --filter "ancestor=mailhog/mailhog")
-
-      - name: Check MailHog status
-        run: |
-          for i in {1..10}; do
-            if curl -s http://localhost:8025/api/v2/messages > /dev/null; then
-              echo "MailHog is ready!"
-              break
-            fi
-            echo "Waiting for MailHog..."
-            sleep 2
-          done
-
-      - name: List running containers
-        run: docker ps
-
-      - name: Check MailHog messages
-        run: |
-          curl -s http://localhost:8025/api/v2/messages | jq .
-
-      - name: Test SMTP connection manually
-        run: |
-          (echo "EHLO example.com"; sleep 1; echo "QUIT") | telnet localhost 1025
-
       - name: Run tests
         run: |
           cd backend
-          poetry run pytest tests/test_send_email -v
+          poetry run pytest tests -v
 
 
