@@ -1,3 +1,4 @@
+import asyncio
 import os
 
 import pytest
@@ -46,6 +47,8 @@ async def test_send_email_real_smtp(override_smtp_config, clear_mailhog):
         template_name='reg_confirm.html',
         link='https://test.com'
     )
+
+    await asyncio.sleep(5)
 
     response = requests.get('http://localhost:8025/api/v2/messages')
     messages = response.json()
