@@ -18,6 +18,7 @@ async def send_email(
         link: str
 ) -> None:
     try:
+        logging.info("Отправка письма...")
         message = MessageSchema(
             subject=subject,
             recipients=[user.email],
@@ -35,5 +36,7 @@ async def send_email(
             message,
             template_name=template_name
         )
+        logging.info("Письмо отправлено успешно.")
     except SMTPDataError as smtp:
+        logging.error(f"Ошибка при отправке письма: {smtp}")
         logger_file.warning(f'Ошибка данных SMTP: {smtp}')
