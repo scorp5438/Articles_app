@@ -37,16 +37,16 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd backend
+#          cd backend
           poetry install --no-interaction --no-root
 
       - name: Run migrations
         run: |
-          cd backend
+#          cd backend
           export PYTHONPATH=$PYTHONPATH:$GITHUB_WORKSPACE
           python -m alembic upgrade head
 
       - name: Run tests
         run: |
-          cd backend
+#          cd backend
           poetry run pytest tests -v
