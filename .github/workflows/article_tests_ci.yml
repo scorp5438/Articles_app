@@ -42,7 +42,6 @@ jobs:
 
       - name: Run migrations
         run: |
-          export PYTHONPATH=$PYTHONPATH:$GITHUB_WORKSPACE
           python -m alembic upgrade head
 
       - name: Run tests
