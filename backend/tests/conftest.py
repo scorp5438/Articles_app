@@ -172,7 +172,7 @@ def override_smtp_config():
     CONF.MAIL_PASSWORD = SecretStr("")
     CONF.MAIL_FROM = "test@example.com"
     CONF.MAIL_PORT = 1025
-    CONF.MAIL_SERVER = "mailhog"
+    CONF.MAIL_SERVER = "localhost"
     CONF.MAIL_STARTTLS = False
     CONF.MAIL_SSL_TLS = False
 
