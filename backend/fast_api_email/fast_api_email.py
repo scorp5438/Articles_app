@@ -1,4 +1,6 @@
 import datetime
+import logging
+
 from aiosmtplib import SMTPDataError
 
 from fastapi import (status,
@@ -8,6 +10,8 @@ from fastapi_mail import FastMail, MessageSchema, MessageType
 from backend.core.config import CONF
 from backend.schemas.user import UserForEmail
 
+
+logger_file = logging.getLogger('file_logger')
 
 async def send_email(
         user: UserForEmail,
@@ -34,8 +38,4 @@ async def send_email(
             template_name=template_name
         )
     except SMTPDataError as smtp:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f'Ошибка данных SMTP: {smtp}'
-        )
-
+        logger_file.warning(f'Ошибка данных SMTP: {smtp}')

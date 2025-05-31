@@ -25,7 +25,7 @@ async def test_get_users(db_session, test_data):
 @pytest.mark.asyncio
 async def test_create_user(db_session, test_data):
     new_user = UserCreate(
-        email='alex_77_90@mail.ru',
+        email='test_user_6@mail.ru',
         password='Qwerty741',
         full_name='New Test User'
     )

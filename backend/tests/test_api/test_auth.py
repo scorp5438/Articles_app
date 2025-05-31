@@ -11,7 +11,7 @@ from backend.db.models.user import Token
 async def test_register_success(db_session):
     app.dependency_overrides[get_db] = lambda: db_session
     test_user = {
-        'email': 'alex_77_90@mail.ru',
+        'email': 'test_user_7@mail.ru',
         'password': 'Qwerty741',
         'full_name': 'Test_user'
     }

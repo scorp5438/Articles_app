@@ -40,11 +40,6 @@ jobs:
           cd backend
           poetry install --no-interaction --no-root
 
-#      - name: Run migrations
-#        run: |
-#          cd backend
-#          python -m alembic upgrade head
-
       - name: Run tests
         run: |
           cd backend
