@@ -1,8 +1,11 @@
+import requests
+
 import pytest
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from fastapi import FastAPI
 from async_asgi_testclient import TestClient
+from pydantic import SecretStr
 
 from backend.core.security import get_password_hash, generate_timestamp_link, create_access_token
 from backend.db.models.user import User
@@ -14,6 +17,7 @@ from backend.api.v1.endpoints.users import router as users_router
 from backend.api.v1.endpoints.articles import router as articles_router
 from backend.api.v1.endpoints.comments import router as comments_router
 from backend.crud.user import add_token
+from backend.core.config import CONF
 
 app = FastAPI()
 app.include_router(auth_router)
@@ -150,3 +154,36 @@ async def test_data(db_session):
         await db_session.refresh(comment)
 
     return {'users': test_users, 'full_link': full_link}
+
+
+@pytest.fixture(scope='function')
+def override_smtp_config():
+    original_config = {
+        'MAIL_USERNAME': CONF.MAIL_USERNAME,
+        'MAIL_PASSWORD': CONF.MAIL_PASSWORD,
+        'MAIL_FROM': CONF.MAIL_FROM,
+        'MAIL_PORT': CONF.MAIL_PORT,
+        'MAIL_SERVER': CONF.MAIL_SERVER,
+        'MAIL_STARTTLS': CONF.MAIL_STARTTLS,
+        'MAIL_SSL_TLS': CONF.MAIL_SSL_TLS,
+    }
+
+    CONF.MAIL_USERNAME = ""
+    CONF.MAIL_PASSWORD = SecretStr("")
+    CONF.MAIL_FROM = "test@example.com"
+    CONF.MAIL_PORT = 1025
+    CONF.MAIL_SERVER = "localhost"
+    CONF.MAIL_STARTTLS = False
+    CONF.MAIL_SSL_TLS = False
+
+    yield
+
+    for key, value in original_config.items():
+        setattr(CONF, key, value)
+
+
+@pytest.fixture(scope='function')
+def clear_mailhog():
+    response = requests.delete("http://localhost:8025/api/v1/messages", timeout=1)
+    print(f"Delete response: {response.status_code}")
+    yield
