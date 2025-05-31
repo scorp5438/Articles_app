@@ -5,7 +5,7 @@ from backend.tests.conftest import db_session, app
 from backend.api.v1.endpoints.comments import router as comments_router
 from backend.db.session import get_db
 from backend.tests.conftest import test_data
-from crud.comments import read
+from backend.crud.comments import read
 
 
 async def test_get_comments(db_session, test_data):
