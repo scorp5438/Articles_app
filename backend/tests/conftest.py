@@ -174,11 +174,7 @@ def override_smtp_config():
     CONF.MAIL_PASSWORD = SecretStr('')
     CONF.MAIL_FROM = 'test@example.com'
     CONF.MAIL_PORT = 1025
-    # CONF.MAIL_SERVER = 'localhost'
-    if os.getenv('GITHUB_ACTIONS') == 'true':
-        CONF.MAIL_SERVER = 'mailhog'
-    else:
-        CONF.MAIL_SERVER = 'localhost'
+    CONF.MAIL_SERVER = 'localhost'
     CONF.MAIL_STARTTLS = False
     CONF.MAIL_SSL_TLS = False
 
@@ -190,6 +186,5 @@ def override_smtp_config():
 
 @pytest.fixture(scope='function')
 def clear_mailhog():
-    mailhog_host = 'mailhog' if os.getenv('GITHUB_ACTIONS') == 'true' else 'localhost'
-    requests.delete(f'http://{mailhog_host}:8025/api/v1/messages', timeout=1)
+    requests.delete('http://localhost:8025/api/v1/messages', timeout=1)
     yield
