@@ -14,7 +14,7 @@ async def test_send_email_real_smtp(override_smtp_config, clear_mailhog):
         full_name='New Test User'
     )
 
-    response = requests.get('http://mailhog:8025/api/v2/messages')
+    response = requests.get('http://localhost:8025/api/v2/messages')
     if response.status_code != 200:
         print("MailHog is not reachable.")
 
