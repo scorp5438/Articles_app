@@ -34,7 +34,7 @@ async def send_email(
 
         await fm.send_message(
             message,
-            template_name=template_name
+            template_name=template_name,
         )
         logging.info("Письмо отправлено успешно.")
     except SMTPDataError as smtp:
