@@ -48,10 +48,27 @@ async def test_send_email_real_smtp(override_smtp_config, clear_mailhog):
         link='https://test.com'
     )
 
-    await asyncio.sleep(5)
+    # await asyncio.sleep(5)
+    mailhog_host = 'mailhog' if os.getenv('GITHUB_ACTIONS') == 'true' else 'localhost'
+    url = f'http://{mailhog_host}:8025/api/v2/messages'
 
-    response = requests.get('http://localhost:8025/api/v2/messages')
-    messages = response.json()
+    # Ждём появления письма с таймаутом
+    for _ in range(5):
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            messages = response.json()
+            if messages['count'] > 0:
+                break
+        except (requests.RequestException, KeyError):
+            pass
+        await asyncio.sleep(2)
+    else:
+        pytest.fail("Письмо не появилось в MailHog после 10 секунд ожидания")
+
+
+    # response = requests.get('http://localhost:8025/api/v2/messages')
+    # messages = response.json()
     last_message = messages['items'][0]
     recipients = last_message.get('Content').get('Headers').get('To')
     subject = last_message['Content']['Headers']['Subject']
