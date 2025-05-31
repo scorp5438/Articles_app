@@ -168,11 +168,11 @@ def override_smtp_config():
         'MAIL_SSL_TLS': CONF.MAIL_SSL_TLS,
     }
 
-    CONF.MAIL_USERNAME = ""
+    CONF.MAIL_USERNAME =''
     CONF.MAIL_PASSWORD = SecretStr("")
-    CONF.MAIL_FROM = "test@example.com"
+    CONF.MAIL_FROM = 'test@example.com'
     CONF.MAIL_PORT = 1025
-    CONF.MAIL_SERVER = "0.0.0.0"
+    CONF.MAIL_SERVER = 'localhost'
     CONF.MAIL_STARTTLS = False
     CONF.MAIL_SSL_TLS = False
 
@@ -184,6 +184,6 @@ def override_smtp_config():
 
 @pytest.fixture(scope='function')
 def clear_mailhog():
-    response = requests.delete("http://localhost:8025/api/v1/messages", timeout=1)
+    response = requests.delete('http://localhost:8025/api/v1/messages', timeout=1)
     print(f"Delete response: {response.status_code}")
     yield
