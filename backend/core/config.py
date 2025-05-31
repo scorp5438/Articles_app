@@ -25,16 +25,16 @@ PORT = 8080
 POSTGRES_USER = os.getenv('POSTGRES_USER', 'test_article_user')
 POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD', 'test_password')
 POSTGRES_DB = os.getenv('POSTGRES_DB', 'test_article_db')
-DB_HOST = os.getenv('DB_HOST')
+DB_HOST = os.getenv('DB_HOST', 'localhost')
 
 SQLALCHEMY_DATABASE_URL = f'postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{DB_HOST}/{POSTGRES_DB}'
 
 # Конфигурация email
 
 CONF = ConnectionConfig(
-    MAIL_USERNAME=os.getenv('MAIL_USERNAME'),
-    MAIL_PASSWORD=os.getenv('MAIL_PASSWORD'),
-    MAIL_FROM=os.getenv('MAIL_USERNAME'),
+    MAIL_USERNAME=os.getenv('MAIL_USERNAME', 'test@example.com'),
+    MAIL_PASSWORD=os.getenv('MAIL_PASSWORD', 'test_password'),
+    MAIL_FROM=os.getenv('MAIL_USERNAME', 'test@example.com'),
     MAIL_PORT=465,
     MAIL_SERVER='smtp.mail.ru',
     MAIL_STARTTLS=False,
