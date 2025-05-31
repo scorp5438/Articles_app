@@ -40,3 +40,4 @@ async def send_email(
     except SMTPDataError as smtp:
         logging.error(f"Ошибка при отправке письма: {smtp}")
         logger_file.warning(f'Ошибка данных SMTP: {smtp}')
+

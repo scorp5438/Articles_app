@@ -64,6 +64,10 @@ jobs:
       - name: List running containers
         run: docker ps
 
+      - name: Check MailHog messages
+        run: |
+          curl -s http://localhost:8025/api/v2/messages | jq .
+
       - name: Run tests
         run: |
           cd backend
