@@ -16,8 +16,9 @@ async def test_send_email_real_smtp(override_smtp_config, clear_mailhog):
 
     response = requests.get('http://localhost:8025/api/v2/messages')
     if response.status_code != 200:
-        print("MailHog is not reachable.")
-
+        print('MailHog is not reachable.')
+    else:
+        print(f'{response.status_code = }')
     await send_email(
         user=test_user,
         subject='Test Email',
@@ -27,7 +28,7 @@ async def test_send_email_real_smtp(override_smtp_config, clear_mailhog):
 
     await asyncio.sleep(5)
 
-    response = requests.get('http://0.0.0.0:8025/api/v2/messages')
+    response = requests.get('http://localhost:8025/api/v2/messages')
     messages = response.json()
     last_message = messages['items'][0]
     recipients = last_message.get('Content').get('Headers').get('To')
