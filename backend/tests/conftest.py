@@ -180,7 +180,7 @@ def override_smtp_config():
     CONF.MAIL_SERVER = 'localhost'
     CONF.MAIL_STARTTLS = False
     CONF.MAIL_SSL_TLS = False
-    CONF.SUPPRESS_SEND = 0
+    # CONF.SUPPRESS_SEND = 0
     CONF.USE_CREDENTIALS = False
     CONF.VALIDATE_CERTS = False
     CONF.TIMEOUT = 10
