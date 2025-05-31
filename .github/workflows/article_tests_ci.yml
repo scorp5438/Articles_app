@@ -50,6 +50,17 @@ jobs:
       - name: Get MailHog logs
         run: docker logs $(docker ps -q --filter "ancestor=mailhog/mailhog")
 
+      - name: Check MailHog status
+        run: |
+          for i in {1..10}; do
+            if curl -s http://localhost:8025/api/v2/messages > /dev/null; then
+              echo "MailHog is ready!"
+              break
+            fi
+            echo "Waiting for MailHog..."
+            sleep 2
+          done
+
       - name: List running containers
         run: docker ps
 
