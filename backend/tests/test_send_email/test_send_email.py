@@ -1,6 +1,3 @@
-import asyncio
-import os
-
 import pytest
 import requests
 
@@ -27,7 +24,7 @@ async def test_send_email_real_smtp(override_smtp_config, clear_mailhog):
     messages = response.json()
     last_message = messages['items'][0]
     recipients = last_message.get('Content').get('Headers').get('To')
-    subject = last_message['Content']['Headers']['Subject']
+    subject = last_message.get('Content').get('Headers').get('Subject')
 
     assert response.status_code == 200
     assert len(messages['items']) > 0

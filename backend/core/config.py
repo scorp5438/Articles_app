@@ -48,6 +48,7 @@ CONF = ConnectionConfig(
 
 PATTERN_FULL = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%#?&]{8,}$'
 PATTERN_LITE = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$'
+PATTERN_EMAIL = r'[1-9a-zA-Z._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$'
 
 logs_dir = os.path.join(BASE_DIR, 'logs')
 os.makedirs(logs_dir, exist_ok=True)

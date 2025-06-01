@@ -1,0 +1,116 @@
+import argparse
+import re
+from getpass import getpass
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).parent.parent.parent))
+
+from backend.core.config import PATTERN_LITE, PATTERN_EMAIL
+from backend.db.session import get_db
+from backend.db.models import User
+
+def parse_args():
+    """Парсинг аргументов командной строки"""
+    parser = argparse.ArgumentParser(
+        description='Управление данными в приложении'
+    )
+    subparser = parser.add_subparsers(dest='command', help='Доступные команды')
+    create_superuser = subparser.add_parser(
+        'createsuperuser',
+        help='Создание суперпользователя'
+    )
+
+    create_superuser.add_argument('--email', help='email (login)')
+    create_superuser.add_argument('--password', help='Password')
+    create_superuser.add_argument('--fullname', help='Full name')
+    create_superuser.add_argument('--noinput', action='store_true', help='request')
+
+    return parser.parse_args()
+
+
+def is_password_weak(password: str) -> bool:
+    return re.match(PATTERN_LITE, password) is None
+
+
+def is_walid_email(email: str) -> bool:
+    return re.match(PATTERN_EMAIL, email) is None
+
+
+def interactive_create_superuser() -> tuple[str, str, str]:
+    """Интерактивное создание суперпользователя"""
+    print('===Create superuser===')
+    email = input('Username: ').strip()
+    while not email or is_walid_email(email):
+        print(f'Ошибка: некорректная почта, либо не заполнена {email}')
+        email = input('Username: ').strip()
+
+    fullname = input('Fullname: ').strip()
+    while not fullname:
+        print('Ошибка: имя пользователя не может быть пустым')
+        fullname = input('Username: ').strip()
+
+    while True:
+        password = getpass('Password: ').strip()
+        if not password:
+            print('Ошибка: пароль не может быть пустым')
+            password = getpass('Password: ').strip()
+            continue
+
+        password_confirm = getpass('Password: ').strip()
+        if password != password_confirm:
+            print("Ошибка: пароли не совпадают")
+            continue
+
+        if is_password_weak(password):
+            print("\nПредупреждение: ваш пароль слишком простой!")
+            print("Рекомендуется:")
+            print("- Минимум 8 символов")
+            print("- Буквы и цифры")
+
+            confirm = input("\nВы уверены, что хотите использовать этот пароль? (y/n): ").lower()
+            if confirm != 'y':
+                continue
+
+        break
+
+    print(f'{email = } {password = } {fullname = }')
+    return email, password, fullname
+
+
+def execute_from_command_line():
+    """Точка входа для выполнения команд"""
+    args = parse_args()
+    print(args)
+    if args.command == 'createsuperuser':
+        if args.noinput or args.email or args.password or args.fullname:
+            if not args.email or not args.password or not args.fullname:
+                print('Ошибка: в noinput режиме необходимо указывать --email, --password и --fullname')
+                return
+
+            email = args.email
+            password = args.password
+            fullname = args.fullname
+
+            if is_password_weak(password) and not args.noinput:
+                print('Предупреждение: пароль слишком простой!')
+
+            if is_walid_email(email):
+                print(f'Предупреждение: некорректная почта: {email}')
+
+        else:
+            # Интерактивный режим
+            email, password, fullname = interactive_create_superuser()
+
+        # Здесь должна быть логина создания пользователя в БД
+        print(f"\nСуперпользователь '{fullname}' успешно создан!")
+        print(f"Email: {email}")
+        print(f"Password: {'*' * len(password)}")
+
+    else:
+        print(f"Неизвестная команда: {args.command}")
+        print("Доступные команды: createsuperuser")
+
+
+if __name__ == '__main__':
+    execute_from_command_line()
