@@ -190,6 +190,13 @@ async def update(user_id: int, current_user, db: Session, data: UserUpdate):
         )
 
     update_data: dict = data.model_dump(exclude_unset=True)
+
+    if 'is_staff' in update_data.keys() and not current_user.is_staff:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail='You are ahuel!'
+        )
+
     for key, value in update_data.items():
         setattr(user, key, value)
 

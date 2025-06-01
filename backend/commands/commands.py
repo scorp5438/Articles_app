@@ -5,12 +5,15 @@ from getpass import getpass
 import sys
 from pathlib import Path
 
+import asyncpg
+from sqlalchemy import text
+
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
 from backend.core.security import get_password_hash
 from backend.core.config import PATTERN_LITE, PATTERN_EMAIL
 from backend.crud.user import get_user
-from backend.db.session import get_db, AsyncSessionLocal
+from backend.db.session import get_db
 from backend.db.models import User
 
 
@@ -42,9 +45,9 @@ def is_walid_email(email: str) -> bool:
 
 
 async def is_exist_email(email: str) -> bool:
-    async with AsyncSessionLocal() as db:
+    async for db in get_db():
         db_user = await get_user(db, user_email=email)
-    return db_user is None
+    return db_user is not None
 
 
 async def interactive_create_superuser() -> tuple[str, str, str]:
@@ -105,7 +108,7 @@ async def create_superuser_in_db(email: str, password: str, fullname: str) -> bo
         is_active=True,
         is_staff=True,
     )
-    async with AsyncSessionLocal() as db:
+    async for db in get_db():
         db.add(new_user)
         await db.commit()
         await db.refresh(new_user)
@@ -135,7 +138,7 @@ async def execute_from_command_line():
             # Интерактивный режим
             email, password, fullname = await interactive_create_superuser()
 
-        success = await create_superuser_in_db(email, password, fullname, db)
+        success = await create_superuser_in_db(email, password, fullname)
         if success:
             print(f"\nСуперпользователь '{fullname}' успешно создан!")
             print(f"Email: {email}")
