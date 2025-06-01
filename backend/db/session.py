@@ -6,7 +6,7 @@ from sqlalchemy.orm import (sessionmaker,
 from backend.core.config import SQLALCHEMY_DATABASE_URL
 
 # Создайте движок SQLAlchemy
-engine = create_async_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_async_engine(SQLALCHEMY_DATABASE_URL, future=True)
 
 # Создайте фабрику сессий
 AsyncSessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
