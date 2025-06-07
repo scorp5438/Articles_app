@@ -5,6 +5,7 @@ from sqlalchemy import (Column,
                         ForeignKey,
                         func)
 from sqlalchemy.orm import relationship
+
 from ..session import Base
 
 
@@ -14,7 +15,7 @@ class Article(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, nullable=False, index=True)
     content = Column(String, nullable=False, index=True)
-    author_id = Column(Integer, ForeignKey('users.id'), index=True)
+    author_id = Column(Integer, ForeignKey('users.id', ondelete='SET NULL'), index=True)
     created_at = Column(DateTime, server_default=func.now(), index=True)
     updated_at = Column(DateTime, onupdate=func.now(), index=True)
 
@@ -22,4 +23,4 @@ class Article(Base):
     author = relationship('User', back_populates='articles')
 
     # Связь с моделью Comment (один ко многим)
-    comments = relationship('Comment', back_populates='article')
+    comments = relationship('Comment', back_populates='article', cascade='all, delete-orphan')

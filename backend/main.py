@@ -1,30 +1,74 @@
-from contextlib import asynccontextmanager
-
-from fastapi import FastAPI
-from api.v1.endpoints.articles import router as articles_router
-from api.v1.endpoints.auth import router as auth_router
-from api.v1.endpoints.comments import router as comments_router
+from fastapi import FastAPI, status
 import uvicorn
+import sys
+from pathlib import Path
 
-from db.session import create_tables
+sys.path.append(str(Path(__file__).parent.parent))
+from backend.commands.commands import execute_from_command_line
+from backend.api.v1.endpoints.auth import router as auth_router
+from backend.api.v1.endpoints.users import router as users_router
+from backend.api.v1.endpoints.articles import router as articles_router
+from backend.api.v1.endpoints.comments import router as comments_router
+from backend.core.config import HOST, PORT
+
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     await create_tables()
+#     yield
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    await create_tables()
-    yield
+app = FastAPI(
+    title='Articles API',
+    version='0.0.0.0.1.0',
+    description='Rest приложениe для создания, удаления и редактирования статей',
+    contact={
+        'name': 'Александр',
+        'email': 'alex_77_90@mail.ru'
+    }
+)
 
-
-app = FastAPI(lifespan=lifespan)
 app.include_router(articles_router)
 app.include_router(auth_router)
 app.include_router(comments_router)
+app.include_router(users_router)
 
 
-@app.get('/')
+@app.get(
+    '/',
+    status_code=status.HTTP_200_OK,
+    summary='Корневой эндпоинт API',
+    description="""
+    Возвращает приветственное сообщение API.
+    Используется для проверки работоспособности сервиса.
+    """,
+    tags=['Сервис'],
+    responses={
+        status.HTTP_200_OK: {
+            'description': 'API работает корректно',
+            'content': {
+                'application/json': {
+                    'example': {
+                        'message': 'Welcome to the Articles API!'
+                    }
+                }
+            }
+        }
+    }
+)
 async def root():
+    """
+        Корневой эндпоинт
+
+    Возвращает:
+    - dict: Приветственное сообщение
+
+    Использование:
+    - Проверка доступности API
+    - Тестирование подключения
+    """
     return {'message': 'Welcome to the Articles API!'}
 
 
 if __name__ == '__main__':
-    uvicorn.run('main:app', host='0.0.0.0', port=8080, reload=True)
+    execute_from_command_line()
+    uvicorn.run('main:app', host=HOST, port=PORT, reload=True)

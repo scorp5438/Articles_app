@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from typing import Optional
+import secrets
+import string
 
 from sqlalchemy.orm import Session
 from sqlalchemy.future import select
@@ -14,16 +16,15 @@ from backend.db.models.user import (User,
                                     Token)
 from backend.db.session import get_db
 from backend.schemas.user import TokenData
-
-# Секретный ключ для подписи JWT
-SECRET_KEY = 'VPVU3KCIYEKHb2BtaJlHYbpNeSAwEGYmViccL36NhceY1NQksHfv6KJ3/siNtKJr'
-ALGORITHM = 'HS256'
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+from backend.core.config import  SECRET_KEY, ALGORITHM
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/login')
 
 # Контекст для хэширования паролей
 ph = PasswordHasher()
+
+# Конфигурация fast_api_email
+
 
 
 # Функция для создания JWT-токена
@@ -32,7 +33,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=30)
     to_encode.update({'exp': expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
@@ -78,5 +79,32 @@ async def get_current_user(
     if db_user is None:
         raise credentials_exception
     return db_user
+
+
+def generate_timestamp_link(length=24, expires_hours=1):
+    timestamp = int(datetime.now().timestamp())
+    rand_part = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(length))
+    return f'{rand_part}_{timestamp}_{expires_hours}'
+
+
+def verify_timestamp_link(link: str):
+    try:
+        rand_part, timestamp_str, expires_hours_str = link.split('_')
+        timestamp = int(timestamp_str)
+        expires_hours = int(expires_hours_str)
+
+        creation_time = datetime.fromtimestamp(timestamp)
+        expires_time = creation_time + timedelta(hours=expires_hours)
+
+        if datetime.now() > expires_time:
+            return False
+        return True
+    except (ValueError, AttributeError):
+        return False
+
+
+
+
+
 
 

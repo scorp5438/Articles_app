@@ -1,16 +1,41 @@
 services:
+
+  fastapi:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    volumes:
+      - ./backend/logs:/app/backend/logs
+    environment:
+      - PYTHONPATH=/app
+
   db:
     image: postgres:17
-    environment:
-      POSTGRES_DB: articles_db
-      POSTGRES_USER: user_art
-      POSTGRES_PASSWORD: 1324
-      PORT: 5432
+    env_file:
+      - ./backend/.env
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
       - postgres_articles:/var/lib/postgresql/data
 
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  celery:
+    build: ./backend
+    command: celery -A backend.tasks.email_tasks worker -P gevent --loglevel=info
+    depends_on:
+      - redis
+      - db
+    environment:
+      - PYTHONPATH=/app
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - .:/app
 
 volumes:
   postgres_articles:

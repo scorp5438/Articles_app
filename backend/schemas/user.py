@@ -1,14 +1,14 @@
 import re
+from typing import Optional
+from datetime import date
 
 from pydantic import (BaseModel,
                       EmailStr,
                       Field,
-                      field_validator)
-from typing import Optional
-from datetime import date
+                      field_validator,
+                      ConfigDict)
 
-PATTERN_FULL = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#?&])[A-Za-z\d@$!%#?&]{8,}$'
-PATTERN_LITE = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$'
+from backend.core.config import PATTERN_LITE
 
 
 class UserCreate(BaseModel):
@@ -25,14 +25,23 @@ class UserCreate(BaseModel):
         return password
 
 
+class UserForEmail(BaseModel):
+    email: EmailStr
+    full_name: str = Field(min_length=3, max_length=30)
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 class UserResponse(BaseModel):
     id: int
     email: EmailStr
     full_name: str
     is_active: bool
     created_at: date
-    is_staff: Optional[bool]
+    is_staff: bool
     avatar_url: Optional[str]
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserUpdate(BaseModel):
