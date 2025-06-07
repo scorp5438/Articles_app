@@ -38,7 +38,7 @@ async def test_create_comment_by_base_user(db_session, auth_client, test_data):
     data = response.json()
     comments_after= await read(1, db_session)
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     assert data.get('message') == 'Comment successfully added'
     assert len(comments_after) == 3
 

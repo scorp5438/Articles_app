@@ -36,7 +36,7 @@ async def get_user(db: Session, user_id: int = None, user_email: EmailStr | str 
             logger_file.warning('User not found')
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail='user not found'
+                detail='User not found'
             )
     elif user_email:
         result = await db.execute(select(User).filter(User.email == user_email))
@@ -159,7 +159,7 @@ async def activate(token: str, db: Session):
 
     await db.commit()
     await db.refresh(db_user)
-    logger_console.info('User activate')
+    logger_console.info(f'User {db_user.email} activated')
 
     return {'message': 'User activate'}
 
@@ -205,7 +205,7 @@ async def update(user_id: int, current_user, db: Session, data: UserUpdate):
     if 'is_staff' in update_data.keys() and not current_user.is_staff:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail='You don`t have permission'
+            detail='Only admin can change staff status'
         )
 
     for key, value in update_data.items():

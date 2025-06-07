@@ -1,8 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, status
 import uvicorn
 import sys
 from pathlib import Path
-
 
 sys.path.append(str(Path(__file__).parent.parent))
 from backend.commands.commands import execute_from_command_line
@@ -18,15 +17,55 @@ from backend.core.config import HOST, PORT
 #     yield
 
 
-app = FastAPI()
+app = FastAPI(
+    title='Articles API',
+    version='0.0.0.0.1.0',
+    description='Rest приложениe для создания, удаления и редактирования статей',
+    contact={
+        'name': 'Александр',
+        'email': 'alex_77_90@mail.ru'
+    }
+)
+
 app.include_router(articles_router)
 app.include_router(auth_router)
 app.include_router(comments_router)
 app.include_router(users_router)
 
 
-@app.get('/')
+@app.get(
+    '/',
+    status_code=status.HTTP_200_OK,
+    summary='Корневой эндпоинт API',
+    description="""
+    Возвращает приветственное сообщение API.
+    Используется для проверки работоспособности сервиса.
+    """,
+    tags=['Сервис'],
+    responses={
+        status.HTTP_200_OK: {
+            'description': 'API работает корректно',
+            'content': {
+                'application/json': {
+                    'example': {
+                        'message': 'Welcome to the Articles API!'
+                    }
+                }
+            }
+        }
+    }
+)
 async def root():
+    """
+        Корневой эндпоинт
+
+    Возвращает:
+    - dict: Приветственное сообщение
+
+    Использование:
+    - Проверка доступности API
+    - Тестирование подключения
+    """
     return {'message': 'Welcome to the Articles API!'}
 
 

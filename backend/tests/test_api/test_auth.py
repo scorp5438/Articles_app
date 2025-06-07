@@ -19,7 +19,7 @@ async def test_register_success(db_session):
         response = await client.post(f'{auth_router.prefix}/register', json=test_user)
         data = response.json()
 
-        assert response.status_code == 200
+        assert response.status_code == 201
         assert data.get('message') == 'Successfully registered'
         assert data.get('status') == 201
 

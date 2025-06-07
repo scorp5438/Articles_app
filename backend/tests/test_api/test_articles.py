@@ -57,7 +57,7 @@ async def test_create_article_by_base_user(db_session, auth_client, test_data):
     data = response.json()
     articles = (await db_session.execute(select(Article))).scalars().all()
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     assert data.get('message') == 'Article created'
     assert len(articles) == 3
 

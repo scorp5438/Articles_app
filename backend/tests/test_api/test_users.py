@@ -117,7 +117,7 @@ async def test_update_user_not_exist_by_admin(db_session, auth_client, test_data
     email_after_update = test_data.get('users')[1].email
 
     assert response.status_code == 404
-    assert data.get('detail') == 'user not found'
+    assert data.get('detail') == 'User not found'
     assert email_before_update == email_after_update
 
 
@@ -184,5 +184,5 @@ async def test_delete_user_not_exist_by_admin(db_session, auth_client, test_data
     users_after_delete = await get_user(db_session)
 
     assert response.status_code == 404
-    assert data.get('detail') == 'user not found'
+    assert data.get('detail') == 'User not found'
     assert len(users_after_delete) == 4
