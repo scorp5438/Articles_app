@@ -87,6 +87,25 @@ async def del_token(data: str, db: Session):
     await db.commit()
     logger_console.info('token deleted')
 
+async def send_link(user: User, db: Session):
+    full_link = generate_timestamp_link()
+    rand_part, *_ = full_link.split('_')
+    confirmation_url = f"http://{HOST}:{PORT}/auth/reg-confirm/{full_link}"
+    db_user = await get_user(db, user_email=user.email)
+    db_user.conf_reg_link = rand_part
+
+    db.add(db_user)
+    await db.commit()
+    await db.refresh(db_user)
+
+    user_data = UserForEmail.model_validate(db_user)
+
+    await send_email_task(
+        user=user_data,
+        subject='Подтверждение регистрации',
+        template_name='reg_confirm.html',
+        link=confirmation_url
+    )
 
 async def create(user: UserCreate, db: Session):
     email = user.email
@@ -99,28 +118,29 @@ async def create(user: UserCreate, db: Session):
         )
 
     hashed_password = get_password_hash(user.password)
-    full_link = generate_timestamp_link()
-    rand_part, *_ = full_link.split('_')
-
-    confirmation_url = f"http://{HOST}:{PORT}/auth/reg-confirm/{full_link}"
+    # full_link = generate_timestamp_link()
+    # rand_part, *_ = full_link.split('_')
+    #
+    # confirmation_url = f"http://{HOST}:{PORT}/auth/reg-confirm/{full_link}"
     new_user = User(
         email=user.email,
         hashed_password=hashed_password,
         full_name=user.full_name,
-        conf_reg_link=rand_part,
+        # conf_reg_link=rand_part,
     )
     db.add(new_user)
     await db.commit()
     await db.refresh(new_user)
     logger_console.info('Successfully registered')
 
-    user_data = UserForEmail.model_validate(new_user)
-    await send_email_task(
-        user=user_data,
-        subject='Подтверждение регистрации',
-        template_name='reg_confirm.html',
-        link=confirmation_url
-    )
+    await send_link(new_user, db)
+    # user_data = UserForEmail.model_validate(new_user)
+    # await send_email_task(
+    #     user=user_data,
+    #     subject='Подтверждение регистрации',
+    #     template_name='reg_confirm.html',
+    #     link=confirmation_url
+    # )
     return {'message': 'Successfully registered', 'status': status.HTTP_201_CREATED}
 
 
@@ -194,7 +214,7 @@ async def update(user_id: int, current_user, db: Session, data: UserUpdate):
     if 'is_staff' in update_data.keys() and not current_user.is_staff:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail='You are ahuel!'
+            detail='You don`t have permission'
         )
 
     for key, value in update_data.items():

@@ -152,3 +152,25 @@ async def test_logout(db_session, test_data):
         assert is_token is None
         assert data.get('message') == 'Successfully logged out'
 
+
+async def test_get_link(db_session, test_data):
+    app.dependency_overrides[get_db] = lambda: db_session
+    user = test_data.get('users')[2]
+
+    async with TestClient(app) as client:
+        response = await client.post(
+            f'{auth_router.prefix}/login',
+            form={'username': user.email, 'password': 'Qwerty741'},
+            headers={'Content-Type': 'application/x-www-form-urlencoded'},
+        )
+        token = response.json().get('access_token')
+
+        response = await client.get(
+            f'{auth_router.prefix}/get_link',
+            headers={'Authorization': f'Bearer {token}'}
+        )
+
+        data = response.json()
+
+        assert response.status_code == 200
+        assert data.get('message') == 'link was sent'
