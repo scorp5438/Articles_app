@@ -23,7 +23,7 @@ from backend.crud.user import (create,
                                del_token,
                                activate)
 from backend.db.models import User
-from crud.user import send_link
+from backend.crud.user import send_link
 
 router = APIRouter(prefix='/auth', tags=['auth'])
 
