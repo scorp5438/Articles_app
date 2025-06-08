@@ -1,10 +1,6 @@
 from fastapi import FastAPI, status
 import uvicorn
-import sys
-from pathlib import Path
 
-sys.path.append(str(Path(__file__).parent.parent))
-from backend.commands.commands import execute_from_command_line
 from backend.api.v1.endpoints.auth import router as auth_router
 from backend.api.v1.endpoints.users import router as users_router
 from backend.api.v1.endpoints.articles import router as articles_router
@@ -70,5 +66,4 @@ async def root():
 
 
 if __name__ == '__main__':
-    execute_from_command_line()
     uvicorn.run('main:app', host=HOST, port=PORT, reload=True)
