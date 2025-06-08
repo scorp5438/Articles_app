@@ -116,19 +116,19 @@ backend/
 ## ⚙️ Конфигурация
 
 ```ini
-    SECRET_KEY=VPVU3KCIYEKHb2BtaJlHYbpNeSAwEGYmViccL36NhceY1NQksHfv6KJ3/siNtKJr
+SECRET_KEY=секретный ключ
 
-    POSTGRES_DB=имя дб
-    POSTGRES_USER=имя пользователя
-    POSTGRES_PASSWORD=пароль
-    DB_HOST=db
+POSTGRES_DB=имя дб
+POSTGRES_USER=имя пользователя
+POSTGRES_PASSWORD=пароль
+DB_HOST=db
 
 
-    MAIL_USERNAME=почта отправителя
-    MAIL_PASSWORD=пароль для использования почты в приложении
-    SUPPRESS_SEND=0
+MAIL_USERNAME=почта отправителя
+MAIL_PASSWORD=пароль для использования почты в приложении
+SUPPRESS_SEND=0
 
-    REDIS_URL=redis://redis:6379/0
+REDIS_URL=redis://redis:6379/0
 ```
 
 ## 🔧 Важные параметры
