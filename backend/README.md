@@ -64,12 +64,12 @@
 4. При первом запуске выполните миграции:
 ```bash
    sudo docker ps
-   sudo docker-compose exec {id контейнера fastapi} alembic upgrade head
+   sudo docker exec -it {id контейнера fastapi} alembic upgrade head
 ```
 
 5. Создайте суперпользователя (опционально):
 ```bash
-   sudo docker-compose exec {id контейнера fastapi} python commands.py createsuperuser \
+   sudo docker exec {id контейнера fastapi} python commands.py createsuperuser \
     --email admin@example.com \
     --password yourpassword \
     --fullname "Admin" \
@@ -78,7 +78,7 @@
    или
 ```bash
   sudo docker ps
-  sudo docker-compose exec {id контейнера fastapi} /bin/bash
+  sudo docker exec -it {id контейнера fastapi} /bin/bash
   cd commands
   python commands.py createsuperuser
 ```
@@ -109,10 +109,13 @@
 ```
 
 ## 🧪 Тестирование
-
+Для тестирования нужно запустить специальный docker-compose.yml, находящийся в папке с тестами
+backend/tests
 ```bash
-    sudo docker ps
-    sudo docker-compose exec {id контейнера fastapi} pytest
+    cd backend/tests
+    sudo docker compose up -d
+    cd ..
+    python -m pytest tests -v
 ```
 CI/CD автоматически запускает тесты при push в ветку main.
 
