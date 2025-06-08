@@ -19,30 +19,55 @@
 ## 🛠 Технологии
 
 - **Backend**: FastAPI (Python 3.10+)
+
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-FCA121?style=for-the-badge&logo=sqlalchemy&logoColor=black)
+![Pytest](https://img.shields.io/badge/Pytest-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
 - **База данных**: PostgreSQL
+
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 - **Асинхронные задачи**: Celery + Redis
+
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
+![Celery](https://img.shields.io/badge/Celery-37814A?style=for-the-badge&logo=celery&logoColor=white)
 - **Деплой**: Docker + docker-compose
+
+![Docker](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+![Docker Compose](https://img.shields.io/badge/Docker_Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 - **Документация**: Swagger (автогенерация)
 
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
+
 ## 📦 Установка
+
+### Требования
+- Docker 20.10+
+- Docker Compose 2.0+
 
 1. Клонируйте репозиторий:
 ```bash
    git clone https://github.com/scorp5438/Articles_app.git
    cd Articles_app
 ```
+2. Создайте файл .env на основе .env.example и заполните настройки:
+```bash
+   cp .env.example .env
+   nano .env  # или отредактируйте в любом редакторе
+```
 
-2. Запустите сервисы через docker-compose:
+3. Запустите сервисы через docker-compose:
 ```bash
    sudo docker-compose up -d --build
 ```
-3. При первом запуске выполните миграции:
+4. При первом запуске выполните миграции:
 ```bash
    sudo docker ps
    sudo docker-compose exec {id контейнера fastapi} alembic upgrade head
 ```
 
-4. Создайте суперпользователя (опционально):
+5. Создайте суперпользователя (опционально):
 ```bash
    sudo docker-compose exec {id контейнера fastapi} python commands.py createsuperuser \
     --email admin@example.com \
@@ -97,15 +122,16 @@ CI/CD автоматически запускает тесты при push в в
 backend/
 ├── alembic/       # Миграции БД
 ├── api/           # Эндпоинты API
-├── commands/      # Команда для создвния суперпользователя
+├── commands/      # CLI-команды
 ├── core/          # Конфиги и security
 ├── crud/          # Операции с БД
 ├── db/            # Модели SQLAlchemy
-├── fast_api_email # Модуль отправка писем
-├── logs           # Файлы логов
+├── fast_api_email # Отправка email
+├── logs           # Логи приложения
 ├── schemas/       # Pydantic-схемы
 ├── tasks/         # Celery-таски
 ├── tests/         # Тесты
+└── main.py        # Точка входа
 .github/workflows/ # CI/CD конфигурация
 ```
 
@@ -118,18 +144,21 @@ backend/
 ## ⚙️ Конфигурация
 
 ```ini
+# Безопасность
 SECRET_KEY=секретный ключ
 
+# БД
 POSTGRES_DB=имя дб
 POSTGRES_USER=имя пользователя
 POSTGRES_PASSWORD=пароль
 DB_HOST=db
 
-
+# Email
 MAIL_USERNAME=почта отправителя
 MAIL_PASSWORD=пароль для использования почты в приложении
 SUPPRESS_SEND=0
 
+# Redis
 REDIS_URL=redis://redis:6379/0
 ```
 
