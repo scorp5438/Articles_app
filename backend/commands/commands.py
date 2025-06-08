@@ -65,7 +65,7 @@ async def interactive_create_superuser() -> tuple[str, str, str]:
     fullname = input('Fullname: ').strip()
     while not fullname:
         print('Ошибка: имя пользователя не может быть пустым')
-        fullname = input('Username: ').strip()
+        fullname = input('Fullname: ').strip()
 
     while True:
         password = getpass('Password: ').strip()
