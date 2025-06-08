@@ -7,7 +7,6 @@
 - **Аутентификация**:
   - Регистрация с подтверждением по email
   - JWT-авторизация
-  - Восстановление пароля
 - **Управление профилем**:
   - Просмотр/редактирование данных
 - **Статьи и комментарии**:
@@ -35,16 +34,17 @@
 
 2. Запустите сервисы через docker-compose:
 ```bash
-   docker-compose up -d --build
+   sudo docker-compose up -d --build
 ```
 3. При первом запуске выполните миграции:
 ```bash
-   docker-compose exec {id контейнера fastapi} alembic upgrade head
+   sudo docker ps
+   sudo docker-compose exec {id контейнера fastapi} alembic upgrade head
 ```
 
 4. Создайте суперпользователя (опционально):
 ```bash
-   docker-compose exec {id контейнера fastapi} python commands.py createsuperuser \
+   sudo docker-compose exec {id контейнера fastapi} python commands.py createsuperuser \
     --email admin@example.com \
     --password yourpassword \
     --fullname "Admin" \
@@ -52,7 +52,8 @@
 ```
    или
 ```bash
-  docker-compose exec {id контейнера fastapi} /bin/bash
+  sudo docker ps
+  sudo docker-compose exec {id контейнера fastapi} /bin/bash
   cd commands
   python commands.py createsuperuser
 ```
@@ -85,7 +86,8 @@
 ## 🧪 Тестирование
 
 ```bash
-    docker-compose exec {id контейнера fastapi} pytest
+    sudo docker ps
+    sudo docker-compose exec {id контейнера fastapi} pytest
 ```
 CI/CD автоматически запускает тесты при push в ветку main.
 
@@ -116,19 +118,19 @@ backend/
 ## ⚙️ Конфигурация
 
 ```ini
-    SECRET_KEY=VPVU3KCIYEKHb2BtaJlHYbpNeSAwEGYmViccL36NhceY1NQksHfv6KJ3/siNtKJr
+SECRET_KEY=секретный ключ
 
-    POSTGRES_DB=имя дб
-    POSTGRES_USER=имя пользователя
-    POSTGRES_PASSWORD=пароль
-    DB_HOST=db
+POSTGRES_DB=имя дб
+POSTGRES_USER=имя пользователя
+POSTGRES_PASSWORD=пароль
+DB_HOST=db
 
 
-    MAIL_USERNAME=почта отправителя
-    MAIL_PASSWORD=пароль для использования почты в приложении
-    SUPPRESS_SEND=0
+MAIL_USERNAME=почта отправителя
+MAIL_PASSWORD=пароль для использования почты в приложении
+SUPPRESS_SEND=0
 
-    REDIS_URL=redis://redis:6379/0
+REDIS_URL=redis://redis:6379/0
 ```
 
 ## 🔧 Важные параметры
